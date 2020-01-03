@@ -3,13 +3,13 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "vhdPath": {
-            "type": "String",            
+            "type": "String",
             "metadata": {
                 "description": "SMB path where FSLogix agent will store profiles."
             }
         },
         "vmList": {
-            "minLength": 1,            
+            "minLength": 1,
             "type": "String",
             "metadata": {
                 "description": "List of virtual machines to install the FSLogix agent o, if using multiple VMs, make their names comma separate. E.g. VM01, VM02, VM03.to "
