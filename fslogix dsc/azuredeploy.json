@@ -8,17 +8,23 @@
                                         "description": "SMB path where FSLogix agent will store profiles."
                                 }
                         },
-                        "vmList": {
+                        "vmName": {
                                 "type": "string",
                                 "metadata": {
-                                        "description": "List of virtual machines to install the FSLogix agent o, if using multiple VMs, make their names comma separate. E.g. VM01, VM02, VM03.to "
+                                        "description": "VM name to install the FSLogix agent on."
                                 }
-                        }                      
+                        },
+                        "timestamp": {
+                                "type": "string",
+                                "metadata": {
+                                        "description": "Timestamp of the custom script."
+                                },
+                                "defaultValue":"[utcNow()]"
+                        }
                 },
                 "variables": {
                         "baseUri": "https://raw.githubusercontent.com/madsamuel/wvd/master/fslogix%20dsc/",
-                        "cseName": "[concat(parameters('vmName'),'/','customscript')]",
-                        "vmList": "[split(parameters('vmList'),',')]"
+                        "cseName": "[concat(parameters('vmName'),'/','customscript')]"
                 },
                 "resources": [
                 {
@@ -26,15 +32,11 @@
                         "type": "Microsoft.Compute/virtualMachines/extensions",
                         "name": "[variables('cseName')]",
                         "location": "[resourceGroup().location]",
-                        "copy": {
-                                "name": "vmDomainJoinCopy",                        
-                                "count": "[length(variables('vmList'))]"
-                              },
                         "properties": {
                                 "publisher": "Microsoft.Compute",
                                 "type": "CustomScriptExtension",
                                 "typeHandlerVersion": "1.9",
-                                "autoUpgradeMinorVersion": true,                                
+                                "autoUpgradeMinorVersion": true,
                                 "settings": {
                                         "fileUris": [
                                                 "[concat(variables('baseUri'),'FSLogix_Apps.zip')]",
