@@ -23,7 +23,7 @@
                         }
                 },
                 "variables": {
-                        "baseUri": "https://raw.githubusercontent.com/madsamuel/wvd/tree/master/fslogix%20dsc/",
+                        "baseUri": "https://raw.githubusercontent.com/madsamuel/wvd/master/fslogix%20dsc/",
                         "cseName": "[concat(parameters('vmName'),'/','customscript')]"
                 },
                 "resources": [
@@ -40,7 +40,7 @@
                                 "settings": {
                                         "fileUris": [
                                                 "[concat(variables('baseUri'),'FSLogix_Apps.zip')]",
-                                                "[concat(variables('baseUri'),'FSLogixAgentInstall.ps1')]"
+                                                "[concat(variables('https://github.com/madsamuel/wvd/blob/master/fslogix%20dsc/'),'FSLogixAgentInstall.ps1')]"
                                                 ],
                                         "timestamp":"[parameters('timestamp')]"
                                 },
