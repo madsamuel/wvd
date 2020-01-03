@@ -1,58 +1,56 @@
 {
-        "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-        "contentVersion": "1.0.0.0",
-        "parameters": {
-            "vhdPath": {
-                "type": "String",
-                "name": "SMB Path",
-                "metadata": {
-                    "description": "SMB path where FSLogix agent will store profiles."
-                }
-            },
-            "vmList": {
-                "minLength": 1,
-                "name": "List of VMs",
-                "type": "String",
-                "metadata": {
-                    "description": "List of virtual machines to install the FSLogix agent o, if using multiple VMs, make their names comma separate. E.g. VM01, VM02, VM03.to "
-                }
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vhdPath": {
+            "type": "String",            
+            "metadata": {
+                "description": "SMB path where FSLogix agent will store profiles."
             }
         },
-        "variables": {
-            "baseUri": "https://raw.githubusercontent.com/madsamuel/wvd/master/fslogix%20dsc/",
-            "vmListArray": "[split(parameters('vmList'),',')]"
-        },
-        "resources": [
-            {
-                "type": "Microsoft.Compute/virtualMachines/extensions",
-                "apiVersion": "2018-10-01",
-                "name": "[concat(trim(variables('vmListArray')[copyIndex()]),'/customscript')]",
-                "location": "[resourceGroup().location]",
-                "properties": {
-                    "publisher": "Microsoft.Compute",
-                    "type": "CustomScriptExtension",
-                    "typeHandlerVersion": "1.9",
-                    "autoUpgradeMinorVersion": true,
-                    "settings": {
-                        "fileUris": [
-                            "[concat(variables('baseUri'),'FSLogix_Apps.zip')]",
-                            "[concat(variables('baseUri'),'FSLogixAgentInstall.ps1')]"
-                        ]
-                    },
-                    "protectedSettings": {
-                        "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File FSLogixAgentInstall.ps1 -vhdPath ', parameters('vhdPath'))]"
-                    }
-                },
-                "copy": {
-                    "name": "agentInstall",
-                    "count": "[length(variables('vmListArray'))]"
-                }
-            }
-        ],
-        "outputs": {
-            "instanceView": {
-                "type": "Object",
-                "value": "[variables('vmListArray')]"
+        "vmList": {
+            "minLength": 1,            
+            "type": "String",
+            "metadata": {
+                "description": "List of virtual machines to install the FSLogix agent o, if using multiple VMs, make their names comma separate. E.g. VM01, VM02, VM03.to "
             }
         }
+    },
+    "variables": {
+        "baseUri": "https://raw.githubusercontent.com/madsamuel/wvd/master/fslogix%20dsc/",
+        "vmListArray": "[split(parameters('vmList'),',')]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "apiVersion": "2018-10-01",
+            "name": "[concat(trim(variables('vmListArray')[copyIndex()]),'/customscript')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "publisher": "Microsoft.Compute",
+                "type": "CustomScriptExtension",
+                "typeHandlerVersion": "1.9",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "fileUris": [
+                        "[concat(variables('baseUri'),'FSLogix_Apps.zip')]",
+                        "[concat(variables('baseUri'),'FSLogixAgentInstall.ps1')]"
+                    ]
+                },
+                "protectedSettings": {
+                    "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File FSLogixAgentInstall.ps1 -vhdPath ', parameters('vhdPath'))]"
+                }
+            },
+            "copy": {
+                "name": "agentInstall",
+                "count": "[length(variables('vmListArray'))]"
+            }
+        }
+    ],
+    "outputs": {
+        "instanceView": {
+            "type": "Object",
+            "value": "[variables('vmListArray')]"
+        }
     }
+}
