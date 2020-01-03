@@ -50,7 +50,7 @@
         ],
                 "outputs": {
                         "instanceView": {
-                                "value": "[reference( resourceId('Microsoft.Compute/virtualMachines/extensions', variables('vmListArray'),'customscript')).instanceView]",
+                                "value": "[reference( resourceId('Microsoft.Compute/virtualMachines/extensions', 'customscript')).instanceView]",
                                 "type": "object"
                         }
                 }
