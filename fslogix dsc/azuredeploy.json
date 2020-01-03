@@ -39,8 +39,8 @@
                                 "autoUpgradeMinorVersion": true,
                                 "settings": {
                                         "fileUris": [
-                                                "[concat(variables('baseUri'),'FSLogix_Apps.zip')]",
-                                                "[concat(variables('https://github.com/madsamuel/wvd/blob/master/fslogix%20dsc/'),'FSLogixAgentInstall.ps1')]"
+                                                "[concat(variables('baseUri'),'FSLogixAgentInstall.ps1')]",
+                                                "[concat(variables('https://github.com/madsamuel/wvd/blob/master/fslogix%20dsc/'),'FSLogix_Apps.zip')]"
                                                 ],
                                         "timestamp":"[parameters('timestamp')]"
                                 },
