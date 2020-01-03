@@ -24,6 +24,6 @@ This template DOES NOT:
 Information on the above is available in the WVD documentation here [article](https://docs.microsoft.com/en-us/azure/virtual-desktop/create-host-pools-user-profile).
 Click the button below to deploy:
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https:%2F%2Fraw.githubusercontent.com%2FAzure%2FRDS-Templates%2Fmbastos%2Fjoinhostpool%2Fwvd-sh%2Fjoinhostpool%2Fazuredeploy.json" target="_blank">
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https:%2F%2Fraw.githubusercontent.com%2Fmadsamuel%2Fwvd%2Fmaster%2Ffslogix%20dsc%2Fazuredeploy.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
