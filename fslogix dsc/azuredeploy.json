@@ -3,14 +3,13 @@
                 "contentVersion": "1.0.0.0",
                 "parameters": {
                         "vhdPath": {
-                                "type": "string",                                
+                                "type": "string",
                                 "metadata": {
                                         "description": "SMB path where FSLogix agent will store profiles."
                                 }
                         },
                         "vmList": {
                                 "type": "string",
-                                "minLength": 1,
                                 "metadata": {
                                         "description": "List of virtual machines to install the FSLogix agent o, if using multiple VMs, make their names comma separate. E.g. VM01, VM02, VM03.to "
                                 }
@@ -24,10 +23,10 @@
                 {
                         "apiVersion": "2018-10-01",
                         "type": "Microsoft.Compute/virtualMachines/extensions",
-                        "name": "[concat(trim(variables('vmListArray')[copyIndex()]),'/agentInstall')]",
+                        "name": "[trim(variables('vmListArray')[copyIndex()])]",
                         "location": "[resourceGroup().location]",
                         "copy": {
-                                "name": "agentInstall",                        
+                                "name": "agentInstallCopy",                        
                                 "count": "[length(variables('vmListArray'))]"
                               },
                         "properties": {
