@@ -23,7 +23,7 @@
                         }
                 },
                 "variables": {
-                        "baseUri": "https://github.com/madsamuel/wvd/tree/master/fslogix%20dsc/",
+                        "baseUri": "https://raw.githubusercontent.com/madsamuel/wvd/tree/master/fslogix%20dsc/",
                         "cseName": "[concat(parameters('vmName'),'/','customscript')]"
                 },
                 "resources": [
