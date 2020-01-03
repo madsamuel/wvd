@@ -29,6 +29,7 @@ Click the button below to deploy:
 </a>
 
 Click the button below to deploy to only one VM:
+
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https:%2F%2Fraw.githubusercontent.com%2Fmadsamuel%2Fwvd%2Fmaster%2Ffslogix%20dsc%2FazuredeploySingleVMm.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
