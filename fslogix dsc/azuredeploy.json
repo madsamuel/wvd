@@ -2,16 +2,16 @@
         "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
                 "contentVersion": "1.0.0.0",
                 "parameters": {
-                        "registrationToken": {
+                        "vhdPath": {
                                 "type": "string",
                                 "metadata": {
-                                        "description": "RDAgent registration token."
+                                        "description": "SMB path where FSLogix agent will store profiles."
                                 }
                         },
                         "vmName": {
                                 "type": "string",
                                 "metadata": {
-                                        "description": "VM name to install the RDAgent on."
+                                        "description": "VM name to install the FSLogix agent on."
                                 }
                         },
                         "timestamp": {
@@ -23,7 +23,7 @@
                         }
                 },
                 "variables": {
-                        "baseUri": "https://raw.githubusercontent.com/Azure/RDS-Templates/mbastos/joinhostpool/wvd-sh/joinhostpool/",
+                        "baseUri": "https://github.com/madsamuel/wvd/tree/master/fslogix%20dsc/",
                         "cseName": "[concat(parameters('vmName'),'/','customscript')]"
                 },
                 "resources": [
@@ -39,13 +39,13 @@
                                 "autoUpgradeMinorVersion": true,
                                 "settings": {
                                         "fileUris": [
-                                                "[concat(variables('baseUri'),'Agents.zip')]",
-                                        "[concat(variables('baseUri'),'RdAgentInstall.ps1')]"
+                                                "[concat(variables('baseUri'),'FSLogix_Apps.zip')]",
+                                                "[concat(variables('baseUri'),'FSLogixAgentInstall.ps1')]"
                                                 ],
                                         "timestamp":"[parameters('timestamp')]"
                                 },
                                 "protectedSettings": {
-                                        "commandToExecute":"[concat('powershell -ExecutionPolicy Unrestricted -File RdagentInstall.ps1 -registrationToken ', parameters('registrationToken'))]"
+                                        "commandToExecute":"[concat('powershell -ExecutionPolicy Unrestricted -File FSLogixAgentInstall.ps1 -vhdPath ', parameters('vhdPath'))]"
                                 }
                         }
                 }
