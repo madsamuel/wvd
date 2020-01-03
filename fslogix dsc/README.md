@@ -3,8 +3,9 @@
 This template adds FSLogix agent to a set of virtual machines, part of a WVD host pools. This host pool needs to be alrady created.
 To create a host pool follow this [doc](https://docs.microsoft.com/en-us/azure/virtual-desktop/create-host-pools-powershell).
 
-This template has 1 parameters:
+This template has 2 parameters:
 - Path to SMB storage path where profiles will be stored
+- Comma separated list of VMs
 
 Defaults:
 - Profile disk type defaults to VHD
