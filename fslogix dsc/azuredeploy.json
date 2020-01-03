@@ -17,14 +17,13 @@
                 },
                 "variables": {
                         "baseUri": "https://raw.githubusercontent.com/madsamuel/wvd/master/fslogix%20dsc/",
-                        "cseName": "[concat(parameters('vmName'),'/','customscript')]",
-                        "vmList": "[split(parameters('vmList'),',')]"
+                        "vmList": "[split(parameters('vmList'),',')]"                                           
                 },
                 "resources": [
                 {
                         "apiVersion": "2018-10-01",
                         "type": "Microsoft.Compute/virtualMachines/extensions",
-                        "name": "[variables('cseName')]",
+                        "name": "[trim(variables('vmListArray')[copyIndex()])]",
                         "location": "[resourceGroup().location]",
                         "copy": {
                                 "name": "vmDomainJoinCopy",                        
