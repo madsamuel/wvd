@@ -1,7 +1,10 @@
 Click the button below to deploy:
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fhttps://raw.githubusercontent.com/madsamuel/wvd/master/Create%20and%20provision%20WVD%20host%20pool/mainTemplate.json" target="_blank">
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmadsamuel%2Fwvd%2Fmaster%2Fcreate+and+provision+WVD+host+pool%2FmainTemplate.json target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
+</a>
+<a href="http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2Fmadsamuel%2Fwvd%2Fmaster%2Fcreate+and+provision+WVD+host+pool%2FmainTemplate.json" target="_blank">
+    <img src="http://armviz.io/visualizebutton.png"/>
 </a>
 
 # Create and provision new Windows Virtual Desktop hostpool
