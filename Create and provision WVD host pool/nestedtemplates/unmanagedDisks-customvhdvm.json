@@ -172,6 +172,7 @@
                         "osType": "Windows",
                         "caching": "ReadWrite",
                         "createOption": "FromImage",
+                        "diffDiskSettings": "Local",
                         "image": {
                             "uri": "[parameters('VmImageVhdUri')]"
                         },

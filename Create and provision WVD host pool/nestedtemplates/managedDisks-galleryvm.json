@@ -202,9 +202,10 @@
                     },
                     "osDisk": {
                         "createOption": "FromImage",
+                        "diffDiskSettings": "Local",
                         "managedDisk": {
                             "storageAccountType": "[variables('storageAccountType')]"
-                        }
+                        }                        
                     }
                 },
                 "networkProfile": {
