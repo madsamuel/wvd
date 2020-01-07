@@ -171,10 +171,7 @@
                         "name": "[concat(parameters('rdshPrefix'), copyindex(),'-osDisk')]",
                         "osType": "Windows",
                         "caching": "ReadWrite",
-                        "createOption": "FromImage",
-                        "diffDiskSettings": { 
-               	            "option": "Local" 
-                        },
+                        "createOption": "FromImage",                        
                         "image": {
                             "uri": "[parameters('VmImageVhdUri')]"
                         },

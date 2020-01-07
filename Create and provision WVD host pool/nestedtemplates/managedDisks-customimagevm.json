@@ -168,8 +168,7 @@
                 },
                 "storageProfile": {
                     "osDisk": {
-                        "createOption": "FromImage",
-                        "diffDiskSettings": "Local",
+                        "createOption": "FromImage",                        
                         "managedDisk": {
                             "storageAccountType": "[variables('storageAccountType')]"
                         }

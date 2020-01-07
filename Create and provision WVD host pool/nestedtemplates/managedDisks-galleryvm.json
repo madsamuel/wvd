@@ -201,10 +201,7 @@
                         "version": "latest"
                     },
                     "osDisk": {
-                        "createOption": "FromImage",
-                        "diffDiskSettings": { 
-               	            "option": "Local" 
-                        },
+                        "createOption": "FromImage",                        
                         "managedDisk": {
                             "storageAccountType": "[variables('storageAccountType')]"
                         }                        

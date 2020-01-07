@@ -16,6 +16,11 @@
         },
         "rdshGalleryImageSKU": {
             "type": "string",
+            "allowedValues": [
+                "Windows-10-Enterprise-multi-session-with-Office-365-ProPlus",
+                "Windows-10-Enterprise-multi-session",
+                "2016-Datacenter"
+            ],
             "metadata": {
                 "description": "Gallery image SKU."
             }
@@ -113,29 +118,15 @@
         }
     },
     "variables": {
+        "galleryPublisher": "[if( contains(parameters('rdshGalleryImageSKU'), 'Windows-10-Enterprise-multi-session'), 'MicrosoftWindowsDesktop', 'MicrosoftwindowsServer')]",
+        "galleryOffer": "[if( equals(parameters('rdshGalleryImageSKU'), 'Windows-10-Enterprise-multi-session'), 'Windows-10',  if(equals(parameters('rdshGalleryImageSKU'), 'Windows-10-Enterprise-multi-session-with-Office-365-ProPlus'), 'office-365', 'WindowsServer'))]",
+        "gallerySku": "[if( equals(parameters('rdshGalleryImageSKU'), 'Windows-10-Enterprise-multi-session'), '19h1-evd',   if(equals(parameters('rdshGalleryImageSKU'), 'Windows-10-Enterprise-multi-session-with-Office-365-ProPlus'), 'rs5-evd-o365pp', parameters('rdshGalleryImageSKU')))]",
         "storageAccountType": "[parameters('rdshVMDiskType')]",
-        "imageName": "[concat(parameters('rdshPrefix'), 'image')]",
         "availabilitySetId": {
             "id": "[if(equals(parameters('enablePersistentDesktop'),bool('False')),resourceId('Microsoft.Compute/availabilitySets/', concat(parameters('rdshPrefix'), 'availabilitySet')),json('null'))]"
         }
     },
     "resources": [
-        {
-            "type": "Microsoft.Compute/images",
-            "apiVersion": "2018-10-01",
-            "name": "[variables('imageName')]",
-            "location": "[parameters('location')]",
-            "properties": {
-                "storageProfile": {
-                    "osDisk": {
-                        "osType": "Windows",
-                        "osState": "Generalized",
-                        "blobUri": "[parameters('VmImageVhdUri')]",
-                        "storageAccountType": "[variables('storageAccountType')]"
-                    }
-                }
-            }
-        },
         {
             "apiVersion": "2018-11-01",
             "type": "Microsoft.Network/networkInterfaces",
@@ -170,8 +161,7 @@
                 "count": "[parameters('rdshNumberOfInstances')]"
             },
             "dependsOn": [
-                "[concat('Microsoft.Network/networkInterfaces/', parameters('rdshPrefix'), copyindex(), '-nic')]",
-                "[variables('imageName')]"
+                "[concat('Microsoft.Network/networkInterfaces/', parameters('rdshPrefix'), copyindex(), '-nic')]"
             ],
             "properties": {
                 "hardwareProfile": {
@@ -184,14 +174,18 @@
                     "adminPassword": "[parameters('existingDomainPassword')]"
                 },
                 "storageProfile": {
-                    "osDisk": {
-                        "createOption": "FromImage",                        
-                        "managedDisk": {
-                            "storageAccountType": "[variables('storageAccountType')]"
-                        }
-                    },
                     "imageReference": {
-                        "id": "[resourceId('Microsoft.Compute/images', variables('imageName'))]"
+                        "publisher": "[variables('galleryPublisher')]",
+                        "offer": "[variables('galleryOffer')]",
+                        "sku": "[variables('gallerySku')]",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "createOption": "FromImage",
+                        "caching": "ReadOnly",
+                        "diffDiskSettings": { 
+               	            "option": "Local" 
+                        }
                     }
                 },
                 "networkProfile": {
