@@ -171,7 +171,7 @@
                         "name": "[concat(parameters('rdshPrefix'), copyindex(),'-osDisk')]",
                         "osType": "Windows",
                         "caching": "ReadWrite",
-                        "createOption": "FromImage",                        
+                        "createOption": "FromImage",
                         "image": {
                             "uri": "[parameters('VmImageVhdUri')]"
                         },
