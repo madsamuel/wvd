@@ -3,40 +3,53 @@ param(
 )
 
 #Extract MSIs
-Expand-Archive -path .\Agents.zip 
-$msiFile =  Get-ChildItem .\Agents -name 'Microsoft.RDInfra.RDAgent.Installer*'
+Expand-Archive -path .\AgentsAndKB2592687Update.zip 
+$msiFile =  Get-ChildItem .\AgentsAndKB2592687Update -name 'Microsoft.RDInfra.WVDAgent.Installer*'
 
 write-host $msiFile
 
 cd .\Agents
 
+# install update 
+write-host "Installing KB2592687..."
+$execarg = @(
+    "/quiet"
+    "/norestart"
+)
+Start-Process Windows6.1-KB2592687-x64.msu -Wait -ArgumentList $execarg
+# enable RDP8
+New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services\" -Name fServerEnableRDP8 -Value 1 -PropertyType DWord 
+
+# agents
+# wvd agent
 $execarg = @(
     "/i"
     "$msiFile"
     "/passive"
     "REGISTRATIONTOKEN=$registrationToken"
 )
-
-write-host "Installing RDAgent..."
+write-host "Installing WVD Agent..."
 Start-Process msiexec.exe -Wait -ArgumentList $execarg
 
-
-write-host "Installing BootLoader..."
+# wvd agent manager
+write-host "Installing WVD Agent Manager..."
+$msiFile =  Get-ChildItem .\AgentsAndKB2592687Update -name 'Microsoft.RDInfra.WVDAgentManager*'
 $execarg = @(
     "/i"
-    "Microsoft.RDInfra.RDAgentBootLoader.Installer-x64.msi" 
+    "$msiFile" 
     "/passive"
 )
 Start-Process msiexec.exe -Wait -ArgumentList $execarg
 
-write-host "Agent Status:$((Get-Service rdagentbootloader).Status)"
+# checks 
+write-host "Agent Status:$((Get-Service WVDAgent).Status)"
 
-write-host "Verifiying RDAgent registry keys"
-if ((Test-Path -Path "HKLM:\SOFTWARE\Microsoft\RDInfraAgent") -eq $false) {(Start-Sleep -s 60)} ELSE {write-host "RDinfraAgent Registry entry found"}
-Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\RDInfraAgent"
+write-host "Verifiying WVD Agent registry keys"
+if ((Test-Path -Path "HKLM:\SOFTWARE\Microsoft\WVDAgentManager") -eq $false) {(Start-Sleep -s 60)} ELSE {write-host "WVD Agent Registry entry found"}
+Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\WVDAgentManager"
 
 
-if ((Test-Path -Path "HKLM:\SOFTWARE\Microsoft\RDAgentBootLoader") -eq $false) {(Start-Sleep -s 60)} ELSE {write-host "RDAgentBootLoader Registry entry found"}
+if ((Test-Path -Path "HKLM:\SOFTWARE\Microsoft\RDAgentBootLoader") -eq $false) {(Start-Sleep -s 60)} ELSE {write-host "WVD Agent Manager Registry entry found"}
 Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\RDAgentBootLoader"
 
 write-host "Installation completed"
