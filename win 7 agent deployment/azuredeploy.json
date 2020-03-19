@@ -38,9 +38,7 @@
                             "typeHandlerVersion": "1.9",
                             "autoUpgradeMinorVersion": true,
                             "settings": {
-                                    "fileUris": [
-                                                "[concat(variables('baseUri'),'Microsoft.RDInfra.WVDAgent.Installer-x64-1.0.1288.2700.msi')]",
-                                                "[concat(variables('baseUri'),'Microsoft.RDInfra.WVDAgentManager.Installer-x64-1.0.1288.2700.msi')]",
+                                    "fileUris": [                                                
                                                 "[concat(variables('baseUri'),'Windows6.1-KB2592687-x64.msu')]",                                                                                                                                    
                                                 "[concat(variables('baseUri'),'RdAgentInstall.ps1')]"
                                             ],
