@@ -4,13 +4,9 @@ param(
 
 #Extract MSIs
 Expand-Archive -path .\AgentsAndKB2592687Update.zip 
-$msiFile =  Get-ChildItem .\AgentsAndKB2592687Update -name 'Microsoft.RDInfra.WVDAgent.Installer*'
-
-write-host $msiFile
-
-cd .\Agents
-
 # install update 
+cd .\AgentsAndKB2592687Update
+
 write-host "Installing KB2592687..."
 $execarg = @(
     "/quiet"
@@ -22,6 +18,9 @@ New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Se
 
 # agents
 # wvd agent
+$msiFile =  Get-Item 'Microsoft.RDInfra.WVDAgent.Installer*'
+write-host $msiFile
+
 $execarg = @(
     "/i"
     "$msiFile"
@@ -33,7 +32,7 @@ Start-Process msiexec.exe -Wait -ArgumentList $execarg
 
 # wvd agent manager
 write-host "Installing WVD Agent Manager..."
-$msiFile =  Get-ChildItem .\AgentsAndKB2592687Update -name 'Microsoft.RDInfra.WVDAgentManager*'
+$msiFile =  Get-Item 'Microsoft.RDInfra.WVDAgentManager*'
 $execarg = @(
     "/i"
     "$msiFile" 
