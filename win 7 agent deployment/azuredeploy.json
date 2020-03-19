@@ -39,8 +39,7 @@
                             "autoUpgradeMinorVersion": true,
                             "settings": {
                                     "fileUris": [
-                                            "[concat(variables('baseUri'),'AgentsAndKB2592687Update.zip')]",
-                                    "[concat(variables('baseUri'),'RdAgentInstall.ps1')]"
+                                                "[concat(variables('baseUri'),'RdAgentInstall.ps1')]"
                                             ],
                                     "timestamp":"[parameters('timestamp')]"
                             },
