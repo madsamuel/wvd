@@ -5,13 +5,13 @@
                         "registrationToken": {
                                 "type": "string",
                                 "metadata": {
-                                        "description": "RDAgent registration token."
+                                        "description": "WVD Agent registration token."
                                 }
                         },
                         "vmName": {
                                 "type": "string",
                                 "metadata": {
-                                        "description": "VM name to install the RDAgent on."
+                                        "description": "VM name to install the WVD Agent on."
                                 }
                         },
                         "timestamp": {
