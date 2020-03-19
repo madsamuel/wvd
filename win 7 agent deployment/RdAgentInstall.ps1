@@ -1,13 +1,8 @@
 param(
       [string]$registrationToken
 )
-
-#Extract MSIs
-Expand-Archive -path .\AgentsAndKB2592687Update.zip 
 # install update 
-cd .\AgentsAndKB2592687Update
-
-write-host "Installing KB2592687..."
+Write-host "Installing KB2592687..."
 $execarg = @(
     "/quiet"
     "/norestart"
@@ -19,7 +14,7 @@ New-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Se
 # agents
 # wvd agent
 $msiFile =  Get-Item 'Microsoft.RDInfra.WVDAgent.Installer*'
-write-host $msiFile
+Write-host $msiFile
 
 $execarg = @(
     "/i"
@@ -27,11 +22,11 @@ $execarg = @(
     "/passive"
     "REGISTRATIONTOKEN=$registrationToken"
 )
-write-host "Installing WVD Agent..."
+Write-host "Installing WVD Agent..."
 Start-Process msiexec.exe -Wait -ArgumentList $execarg
 
 # wvd agent manager
-write-host "Installing WVD Agent Manager..."
+Write-host "Installing WVD Agent Manager..."
 $msiFile =  Get-Item 'Microsoft.RDInfra.WVDAgentManager*'
 $execarg = @(
     "/i"
@@ -41,15 +36,15 @@ $execarg = @(
 Start-Process msiexec.exe -Wait -ArgumentList $execarg
 
 # checks 
-write-host "Agent Status:$((Get-Service WVDAgent).Status)"
+Write-host "Agent Status:$((Get-Service WVDAgent).Status)"
 
-write-host "Verifiying WVD Agent registry keys"
-if ((Test-Path -Path "HKLM:\SOFTWARE\Microsoft\WVDAgentManager") -eq $false) {(Start-Sleep -s 60)} ELSE {write-host "WVD Agent Registry entry found"}
+Write-host "Verifiying WVD Agent registry keys"
+if ((Test-Path -Path "HKLM:\SOFTWARE\Microsoft\WVDAgentManager") -eq $false) {(Start-Sleep -s 60)} ELSE {Write-host "WVD Agent Registry entry found"}
 Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\WVDAgentManager"
 
 
-if ((Test-Path -Path "HKLM:\SOFTWARE\Microsoft\RDAgentBootLoader") -eq $false) {(Start-Sleep -s 60)} ELSE {write-host "WVD Agent Manager Registry entry found"}
+if ((Test-Path -Path "HKLM:\SOFTWARE\Microsoft\RDAgentBootLoader") -eq $false) {(Start-Sleep -s 60)} ELSE {Write-host "WVD Agent Manager Registry entry found"}
 Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\RDAgentBootLoader"
 
-write-host "Installation completed"
+Write-host "Installation completed"
 
