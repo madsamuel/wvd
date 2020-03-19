@@ -1,0 +1,59 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+            "contentVersion": "1.0.0.0",
+            "parameters": {
+                    "registrationToken": {
+                            "type": "string",
+                            "metadata": {
+                                    "description": "RDAgent registration token."
+                            }
+                    },
+                    "vmName": {
+                            "type": "string",
+                            "metadata": {
+                                    "description": "VM name to install the RDAgent on."
+                            }
+                    },
+                    "timestamp": {
+                            "type": "string",
+                            "metadata": {
+                                    "description": "Timestamp of the custom script."
+                            },
+                            "defaultValue":"[utcNow()]"
+                    }
+            },
+            "variables": {
+                    "baseUri": "https://github.com/madsamuel/wvd/blob/master/win%207%20agent%20deployment/",
+                    "cseName": "[concat(parameters('vmName'),'/','customscript')]"
+            },
+            "resources": [
+            {
+                    "apiVersion": "2018-10-01",
+                    "type": "Microsoft.Compute/virtualMachines/extensions",
+                    "name": "[variables('cseName')]",
+                    "location": "[resourceGroup().location]",
+                    "properties": {
+                            "publisher": "Microsoft.Compute",
+                            "type": "CustomScriptExtension",
+                            "typeHandlerVersion": "1.9",
+                            "autoUpgradeMinorVersion": true,
+                            "settings": {
+                                    "fileUris": [
+                                            "[concat(variables('baseUri'),'AgentsAndKB2592687Update.zip')]",
+                                    "[concat(variables('baseUri'),'RdAgentInstall.ps1')]"
+                                            ],
+                                    "timestamp":"[parameters('timestamp')]"
+                            },
+                            "protectedSettings": {
+                                    "commandToExecute":"[concat('powershell -ExecutionPolicy Unrestricted -File RdagentInstall.ps1 -registrationToken ', parameters('registrationToken'))]"
+                            }
+                    }
+            }
+    ],
+            "outputs": {
+                    "instanceView": {
+                            "value": "[reference( resourceId('Microsoft.Compute/virtualMachines/extensions', parameters('vmName'),'customscript')).instanceView]",
+                            "type": "object"
+                    }
+            }
+}
