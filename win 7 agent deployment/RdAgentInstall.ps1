@@ -39,12 +39,12 @@ Start-Process msiexec.exe -Wait -ArgumentList $execarg
 Write-host "Agent Status:$((Get-Service WVDAgent).Status)"
 
 Write-host "Verifiying WVD Agent registry keys"
-if ((Test-Path -Path "HKLM:\SOFTWARE\Microsoft\WVDAgentManager") -eq $false) {(Start-Sleep -s 60)} ELSE {Write-host "WVD Agent Registry entry found"}
+if ((Test-Path -Path "HKLM:\SOFTWARE\Microsoft\WVDAgentManager") -eq $false) {(Start-Sleep -s 60)} ELSE {Write-host "WVD Agent Registry entry found."}
 Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\WVDAgentManager"
 
 
-if ((Test-Path -Path "HKLM:\SOFTWARE\Microsoft\RDAgentBootLoader") -eq $false) {(Start-Sleep -s 60)} ELSE {Write-host "WVD Agent Manager Registry entry found"}
+if ((Test-Path -Path "HKLM:\SOFTWARE\Microsoft\RDAgentBootLoader") -eq $false) {(Start-Sleep -s 60)} ELSE {Write-host "WVD Agent Manager Registry entry found."}
 Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\RDAgentBootLoader"
 
-Write-host "Installation completed"
+Write-host "Installation completed."
 
