@@ -1,18 +1,25 @@
 # Join virtual machine to an Windows Virtual Desktop host pool
 
-This template adds a virtual machine to a WVD host pools. The host pool needs to be alrady created.
-To create a host pool follow this [doc](https://docs.microsoft.com/en-us/azure/virtual-desktop/create-host-pools-powershell).
+This template adds set of virtual machines running Windows 7 to a WVD host pools. To create a host pool follow this [doc](https://docs.microsoft.com/en-us/azure/virtual-desktop/create-host-pools-powershell).
+The Windows 7 image must have the latest updates, both mandatory and optional. Installing those makes sure that Remote Desktop Protocol 8.0 update (KB2592687) is installed. 
+Once the update is installed open the Local Group Policy Editor and navigate to Computer Configuration > Administrative Templates > Windows Components > Remote Desktop Services > Remote Desktop Session Host > Remote Session Environment. 
 
-This template has 2 parameters:
+For end users to be able to successfully connect VMs must be domain joined. This can be done via this [doc]https://azure.microsoft.com/en-us/resources/templates/201-vm-domain-join-existing/.
 
+This template has 3 parameters:
+
+- Resrouce Group
 - Registration Token
 - Vm Name
 
-There is a third parameter but you should ignore it. It is just a timestamp for the custom script extension used by this template.
+There is a forth parameter but you should ignore it. It is just a timestamp for the custom script extension used by this template.
 
 The template performs the following actions:
-- Download the WVD agents
-- Install the agents
+- Validate pressence of KB25952687 
+- Download the Windows Virtual Desktop Agent for Windows 7 
+- Install the Windows Virtual Desktop Agent for Windows 7
+- Download the Windows Virtual Desktop Agent Manager for Windows 7 
+- Install the Windows Virtual Desktop Agent Manager for Windows 7
 - Performs a simple verification of the installation
  
 To deploy the template you need the registration token of the host pool you want to add the virtual machine.
