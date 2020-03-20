@@ -1,10 +1,12 @@
 # Join virtual machine to an Windows Virtual Desktop host pool
 
 This template adds set of virtual machines running Windows 7 to a WVD host pools. To create a host pool follow this [doc](https://docs.microsoft.com/en-us/azure/virtual-desktop/create-host-pools-powershell).
+
 The Windows 7 image must have the latest updates, both mandatory and optional. Installing those makes sure that Remote Desktop Protocol 8.0 update (KB2592687) is installed. 
+
 Once the update is installed open the Local Group Policy Editor and navigate to Computer Configuration > Administrative Templates > Windows Components > Remote Desktop Services > Remote Desktop Session Host > Remote Session Environment. 
 
-For end users to be able to successfully connect VMs must be domain joined. This can be done via this [doc]https://azure.microsoft.com/en-us/resources/templates/201-vm-domain-join-existing/.
+For end users to be able to successfully connect VMs must be domain joined. This can be done via this [doc](https://azure.microsoft.com/en-us/resources/templates/201-vm-domain-join-existing/).
 
 This template has 3 parameters:
 
