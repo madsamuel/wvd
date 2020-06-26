@@ -1,4 +1,4 @@
-# Install FSLogix agent on set of VMs
+# Goals
 
 This CSE creates few test users on the domain controller
 

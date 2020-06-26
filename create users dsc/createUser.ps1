@@ -5,16 +5,9 @@ param(
 )
 
 #Extract FSlogix agent 
-Expand-Archive -path .\FSLogix_Apps.zip 
-cd .\FSLogix_Apps\x64\Release\
-
-$execarg = @(
-    "/passive | /quite /log log.txt"
-)
-
 write-host "Create user..."
 
-Import-Module ActiveDirectory -Force
+# Import-Module ActiveDirectory -Force
 
 New-ADUser `
 -SamAccountName $userName `
