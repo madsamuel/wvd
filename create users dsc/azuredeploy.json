@@ -1,7 +1,13 @@
 {
-    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "vmName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the domain controller, where users are to be created."
+            }
+        },
         "userName": {
             "type": "String",
             "metadata": {
@@ -24,13 +30,14 @@
         }
     },    
     "variables": {
-                        "baseUri": "https://raw.githubusercontent.com/madsamuel/wvd/master/create%20users%20dsc%20dsc/"                       
+                        "baseUri": "https://raw.githubusercontent.com/madsamuel/wvd/master/create%20users%20dsc%20dsc/",
+                        "cseName": "[concat(parameters('vmName'),'/','customscript')]"                       
                 },
     "resources": [
         {
             "type": "Microsoft.Compute/virtualMachines/extensions",
             "apiVersion": "2018-10-01",
-            "name": "[concat(trim(variables('vmListArray')[copyIndex()]),'/customscript')]",
+            "name": "[variables('cseName')]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "publisher": "Microsoft.Compute",

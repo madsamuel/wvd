@@ -13,7 +13,8 @@ $execarg = @(
 )
 
 write-host "Create user..."
-Start-Process FSLogixAppsSetup.exe -Wait -ArgumentList $execarg
+
+Import-Module ActiveDirectory -Force
 
 New-ADUser `
 -SamAccountName $userName `
