@@ -30,7 +30,7 @@
         }
     },    
     "variables": {
-                        "baseUri": "https://raw.githubusercontent.com/madsamuel/wvd/master/create%20users%20dsc%20dsc/",
+                        "baseUri": "https://raw.githubusercontent.com/madsamuel/wvd/master/create%20users%20dsc/createUser.ps1",
                         "cseName": "[concat(parameters('vmName'),'/','customscript')]"                       
                 },
     "resources": [
