@@ -19,8 +19,8 @@ steps:
     resourceGroupName: 'AzureRmPipeline-0705-rg'
     location: 'Central US'
     templateLocation: 'Linked artifact'
-    csmFile: 'azuredeploy.json'
-    overrideParameters: '-projectName AzureRmPipeline0704-prj -linkedTemplateUri "https://raw.githubusercontent.com/gt090617/AzureRmPipeline0704-repo/master/linkedStorageAccount.json"'
+    csmFile: 'ci-arm-pipelines/azuredeploy.json'
+    overrideParameters: '-projectName AzureRmPipeline0704-prj -linkedTemplateUri "https://raw.githubusercontent.com/madsamuel/wvd/master/ci-arm-pipelines/linkedStorageAccount.json"'
     deploymentMode: 'Incremental'
     deploymentName: 'AzureRmPipeline0704-depName'
 
