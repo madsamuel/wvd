@@ -16,8 +16,8 @@ function Invoke-GeneralDeployment {
   }
 
   process {
-
-    $templateUri = 'https://raw.githubusercontent.com/samvdjagt/dev/master/Modules/ARM/{0}/deploy.json' -f $moduleName
+    
+    $templateUri = 'https://raw.githubusercontent.com/madsamuel/wvd/master/dev/Modules/ARM/{0}/deploy.json' -f $moduleName
 
     Write-Verbose "Parameters are" -Verbose
     $param = ConvertFrom-Json (Get-Content -Raw -Path $parameterFilePath)

@@ -56,7 +56,7 @@
         }
     },
     "variables": {
-        "_artifactsLocation": "https://raw.githubusercontent.com/madsamuel/dev/master",
+        "_artifactsLocation": "https://raw.githubusercontent.com/madsamuel/wvd/master/dev",
         "AdminPasswordSecret": "adminPassword",
         "existingDomainUsername": "[first(split(parameters('tenantAdminDomainJoinUPN'), '@'))]",
         "existingDomainName": "[split(parameters('tenantAdminDomainJoinUPN'), '@')[1]]",

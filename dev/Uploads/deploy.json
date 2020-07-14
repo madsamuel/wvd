@@ -16,7 +16,7 @@
                 "autoUpgradeMinorVersion": true,
                 "settings": {
                     "fileUris": [
-                        "https://raw.githubusercontent.com/samvdjagt/dev/master/Uploads/createUsers.ps1"
+                        "https://raw.githubusercontent.com/madsamuel/wvd/master/dev/Uploads/createUsers.ps1"
                     ],
                     "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File createUsers.ps1"
                 }
