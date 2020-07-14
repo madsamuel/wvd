@@ -1,0 +1,10 @@
+{
+    "azfilesconfig": [
+        {
+            "enableAzureFiles": true,
+            "SubscriptionId": "[subscriptionId]",
+            "ResourceGroupName": "[wvdMgmtResourceGroupName]",
+            "StorageAccountName": "[profilesStorageAccountName]"
+        }
+    ]
+}
