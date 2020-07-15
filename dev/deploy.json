@@ -71,11 +71,14 @@
         "runbookName": "[concat('wvdrunbook','-',variables('uniquestr'))]",
         "subnet-id": "[resourceId(parameters('virtualNetworkResourceGroupName'), 'Microsoft.Network/virtualNetworks/subnets', parameters('existingVnetName'), parameters('existingSubnetName'))]",
         "tenantId": "[subscription().tenantId]",
+        "uniqueBase0": "[toLower(uniquestring(variables('identityName'), resourceGroup().id, parameters('utcValue'),'MSISetup'))]",
         "uniqueBase": "[toLower(uniquestring(variables('identityName'), resourceGroup().id, parameters('utcValue'),variables('autoAccountName')))]",
         "uniqueBase2": "[toLower(uniquestring(variables('identityName'), subscription().id, parameters('utcValue'),'devOpsSetup'))]",
+        "newGuid0": "[guid(variables('uniqueBase0'))]",
         "newGuid": "[guid(variables('uniqueBase'))]",
         "newGuid2": "[guid(variables('uniqueBase2'))]",
-        "scriptUri": "[concat(variables('_artifactsLocation'),'/ARMRunbookScripts/createServicePrincipal.ps1')]",
+        "scriptUri0": "[concat(variables('_artifactsLocation'),'/ARMRunbookScripts/configureMSI.ps1')]",
+        "scriptUri1": "[concat(variables('_artifactsLocation'),'/ARMRunbookScripts/createServicePrincipal.ps1')]",
         "scriptUri2": "[concat(variables('_artifactsLocation'),'/ARMRunbookScripts/devopssetup.ps1')]",
         "devOpsName": "WVDQuickstart28",   
         "devOpsProjectName": "WVDQuickstartProject28",
@@ -170,44 +173,6 @@
             "properties": {}
         },
         {
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2019-10-01",
-            "name": "userCreation",
-            "resourceGroup": "[parameters('virtualNetworkResourceGroupName')]",
-            "subscriptionId": "[subscription().subscriptionId]",
-            "properties": {
-            "mode": "Incremental",
-            "template": {
-                "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-                "contentVersion": "1.0.0.0",
-                "parameters": {},
-                "variables": {},
-                "resources": [
-                {
-                    "type": "Microsoft.Compute/virtualMachines/extensions",
-                    "apiVersion": "2019-12-01",
-                    "name": "[concat(parameters('computerName'),'/', 'userCreation')]",
-                    "location": "[resourcegroup().location]",
-                    "dependsOn": [],
-                    "properties": {
-                        "publisher": "Microsoft.Compute",
-                        "type": "CustomScriptExtension",
-                        "typeHandlerVersion": "1.7",
-                        "autoUpgradeMinorVersion": true,
-                        "settings": {
-                            "fileUris": [
-                                "[concat(variables('_artifactsLocation'), '/Uploads/createUsers.ps1')]"
-                            ],
-                            "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File createUsers.ps1 ', variables('existingDomainName'), ' ', variables('targetGroup'))]"
-                        }
-                    }
-                }
-                ]
-            },
-            "parameters": {}
-            }
-        },
-        {
             "type": "Microsoft.Automation/automationAccounts/variables",
             "apiVersion": "2015-10-31",
             "name": "[concat(variables('autoAccountName'), '/', variables('automationVariables')[copyIndex()].name)]",
@@ -229,8 +194,6 @@
             "name": "[variables('autoAccountName')]",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-                "[concat('Microsoft.Resources/deployments', '/userCreation')]",
-                "[concat('Microsoft.Resources/deploymentScripts', '/v')]"
             ],
             "tags": {},
             "properties": {
@@ -242,10 +205,12 @@
                 {
                     "type": "runbooks",
                     "apiVersion": "2015-01-01-preview",
-                    "name": "[variables('runbookName')]",
+                    "name": "[concat(variables('runbookName'), '0')]",
                     "location": "[resourceGroup().location]",
                     "dependsOn": [
-                        "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'))]"
+                        "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'))]",
+                        "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/credentials/AzureCredentials')]",
+                        "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/credentials/domainJoinCredentials')]"
                     ],
                     "tags": {},
                     "properties": {
@@ -253,7 +218,46 @@
                         "logProgress": false,
                         "logVerbose": false,
                         "publishContentLink": {
-                            "uri": "[variables('scriptUri')]",
+                            "uri": "[variables('scriptUri0')]",
+                            "version": "1.0.0.0"
+                        }
+                    } 
+                },
+                {
+                    "type": "jobs",
+                    "apiVersion": "2015-01-01-preview",
+                    "name": "[variables('newGuid0')]",
+                    "location": "[resourceGroup().location]",
+                    "dependsOn": [
+                        "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'))]",
+                        "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/runbooks/', variables('runbookName'), '0')]"
+                    ],
+                    "tags": {
+                        "key": "value"
+                    },
+                    "properties": {
+                        "runbook": {
+                            "name": "[concat(variables('runbookName'), '0')]"
+                        }
+                    }
+                },
+                {
+                    "type": "runbooks",
+                    "apiVersion": "2015-01-01-preview",
+                    "name": "[variables('runbookName')]",
+                    "location": "[resourceGroup().location]",
+                    "dependsOn": [
+                        "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'))]",
+                        "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/credentials/AzureCredentials')]",
+                        "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/credentials/domainJoinCredentials')]"
+                    ],
+                    "tags": {},
+                    "properties": {
+                        "runbookType": "PowerShell",
+                        "logProgress": false,
+                        "logVerbose": false,
+                        "publishContentLink": {
+                            "uri": "[variables('scriptUri1')]",
                             "version": "1.0.0.0"
                         }
                     }
@@ -293,7 +297,9 @@
                     "location": "[resourceGroup().location]",
                     "dependsOn": [
                         "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'))]",
-                        "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/runbooks/',variables('runbookName'))]"
+                        "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/runbooks/', variables('runbookName'))]",
+                        "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/runbooks/', variables('runbookName'), '0')]",
+                        "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/', variables('newGuid0'))]"
                     ],
                     "tags": {
                         "key": "value"
@@ -324,7 +330,7 @@
                         }
                     }
                 },
-                                {
+                {
                     "type": "jobs",
                     "apiVersion": "2015-01-01-preview",
                     "name": "[variables('newGuid2')]",
@@ -333,6 +339,7 @@
                         "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'))]",
                         "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/',variables('newGuid'))]",
                         "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/runbooks/',variables('runbookName'), '2')]",
+                        "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/', variables('newGuid0'))]",
                         "[concat('microsoft.visualstudio/account/', variables('devOpsName'))]"
                     ],
                     "tags": {
@@ -408,7 +415,7 @@
             "name": "createDevopsPipeline",
             "location": "[variables('location')]",
             "dependsOn": [
-                "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/',variables('newGuid2'))]"
+                "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/', variables('newGuid2'))]"
             ],
             "kind": "AzureCLI",
             "identity": {
@@ -433,7 +440,8 @@
             "name": "checkAzureCredentials",
             "location": "[variables('location')]",
             "dependsOn": [
-                "[concat('Microsoft.ManagedIdentity/userAssignedIdentities/', variables('identityName'))]"
+                "[concat('Microsoft.ManagedIdentity/userAssignedIdentities/', variables('identityName'))]",
+                "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/', variables('newGuid0'))]"
             ],
             "kind": "AzureCLI",
             "identity": {
@@ -450,6 +458,49 @@
                 "primaryScriptUri": "[concat(variables('_artifactsLocation'),'/ARMRunbookScripts/createDevopsPipeline.sh')]",
                 "cleanupPreference": "OnSuccess",
                 "retentionInterval": "P1D"
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "name": "userCreation",
+            "dependsOn": [
+                "[concat('Microsoft.ManagedIdentity/userAssignedIdentities/', variables('identityName'))]",
+                "[concat('Microsoft.Automation/automationAccounts/', variables('autoAccountName'), '/jobs/', variables('newGuid0'))]"
+            ],
+            "resourceGroup": "[parameters('virtualNetworkResourceGroupName')]",
+            "subscriptionId": "[subscription().subscriptionId]",
+            "properties": {
+            "mode": "Incremental",
+            "template": {
+                "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                "contentVersion": "1.0.0.0",
+                "parameters": {},
+                "variables": {},
+                "resources": [
+                {
+                    "type": "Microsoft.Compute/virtualMachines/extensions",
+                    "apiVersion": "2019-12-01",
+                    "name": "[concat(parameters('computerName'),'/', 'userCreation')]",
+                    "location": "[resourcegroup().location]",
+                    "dependsOn": [
+                    ],
+                    "properties": {
+                        "publisher": "Microsoft.Compute",
+                        "type": "CustomScriptExtension",
+                        "typeHandlerVersion": "1.7",
+                        "autoUpgradeMinorVersion": true,
+                        "settings": {
+                            "fileUris": [
+                                "[concat(variables('_artifactsLocation'), '/Uploads/createUsers.ps1')]"
+                            ],
+                            "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File createUsers.ps1 ', variables('existingDomainName'), ' ', variables('targetGroup'))]"
+                        }
+                    }
+                }
+                ]
+            },
+            "parameters": {}
             }
         }
     ],
