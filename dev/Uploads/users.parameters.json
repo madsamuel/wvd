@@ -1,0 +1,13 @@
+{
+"userconfig": [
+        {
+"createUser": true,
+"createGroup": false,
+"assignUsers": true,
+"syncAD": true,
+"userName": "WVDTestUser001",
+"password": "wvdTest123!"
+        }
+    ]
+}
+
