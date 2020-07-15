@@ -230,7 +230,7 @@
             "location": "[resourceGroup().location]",
             "dependsOn": [
                 "[concat('Microsoft.Resources/deployments', '/userCreation')]",
-                "[concat('Microsoft.Resources/deploymentScripts', '/checkAzureCredentials')]"
+                "[concat('Microsoft.Resources/deploymentScripts', '/v')]"
             ],
             "tags": {},
             "properties": {
