@@ -25,8 +25,7 @@
         }
     },
     "variables": {
-        "_artifactsLocation": "https://raw.githubusercontent.com/madsamuel/wvd/master/arm/quick%20start/",
-        "AdminPasswordSecret": "adminPassword",
+        "_artifactsLocation": "https://raw.githubusercontent.com/madsamuel/wvd/master/arm/quick%20start/",        
         "script": "[concat(variables('_artifactsLocation'),'checkAzureCredentials.ps1')]",
         "location": "[resourcegroup().location]"
     },
@@ -44,7 +43,6 @@
             "name": "checkAzureCredentials",
             "location": "[resourceGroup().location]",
             "kind": "AzurePowerShell",
-            "arguments": "[concat(variables('azureAdminUpn'), ' ', variables('azureAdminPassword'))]",
             "identity": {
                 "type": "userAssigned",
                 "userAssignedIdentities": {
@@ -57,7 +55,7 @@
                 "timeout": "PT30M",
                 "retentionInterval": "P1D",
                 "cleanupPreference": "OnSuccess",
-                "arguments": "[parameters('azureAdminPassword')]",
+                "arguments": "[concat(parameters('azureAdminUpn'), ' ', parameters('azureAdminPassword'))]",
                 "primaryScriptUri": "[variables('script')]"
             }
         }
