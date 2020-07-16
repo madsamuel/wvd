@@ -1,0 +1,54 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "azureAdminUpn": {
+            "type": "string",
+            "metadata": {
+                "description": "The UPN of the account that you're currently logged in with on the Azure Portal. This account should at least have the 'contributor' or 'owner' role on the subscription level for the deployment to succeed. The template will fail if you enter a user account that requires MFA."
+            }
+        },
+        "azureAdminPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The password that corresponds to the Azure admin UPN above."
+            }
+        }
+    },
+    "variables": {
+       "_artifactsLocation": "https://raw.githubusercontent.com/samvdjagt/dev/master",
+        "AdminPasswordSecret": "adminPassword",
+        "script": "[concat(variables('_artifactsLocation'),'checkAzureCredentials.ps1')]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deploymentScripts",
+            "apiVersion": "2019-10-01-preview",
+            "name": "checkAzureCredentials",
+            "location": "[resourceGroup().location]",
+            "kind": "AzurePowerShell",
+            "identity": {
+        "type": "userAssigned",
+        "userAssignedIdentities": {
+          "[parameters('identity')]": {
+          }
+        }
+      },
+            "properties": {
+                "forceUpdateTag": "[parameters('utcValue')]",
+                "azPowerShellVersion": "3.0",
+                "timeout": "PT30M",
+                "retentionInterval": "P1D",
+                "cleanupPreference": "OnSuccess",
+                "arguments": "[parameters('passPhrase')]",
+                "primaryScriptUri": "[parameters('script')]"
+            }
+        }
+    ],
+    "outputs": {
+        "result": {
+            "value": "[reference('runPowerShellInlineWithOutput').outputs.text]",
+            "type": "string"
+        }
+    }
+}
