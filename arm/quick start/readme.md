@@ -1,0 +1,1 @@
+[![Deploy To Azure](https://raw.githubusercontent.com/madsamuel/wvd/master/arm/quick%20start/deploy.json)] 
