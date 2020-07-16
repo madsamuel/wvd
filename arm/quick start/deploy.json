@@ -15,7 +15,8 @@
             }
         },
         "identity": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "WVDServicePrincipal"
         },
         "utcValue": {
             "type": "string",
@@ -37,8 +38,8 @@
             "identity": {   
                 "type": "userAssigned",
                     "userAssignedIdentities": {
-                    "[parameters('identity')]": {
-                    }
+                        "[parameters('identity')]": {
+                        }
                 }
             },
             "properties": {
@@ -48,7 +49,7 @@
                 "retentionInterval": "P1D",
                 "cleanupPreference": "OnSuccess",
                 "arguments": "[parameters('azureAdminPassword')]",
-                "primaryScriptUri": "[parameters('script')]"
+                "primaryScriptUri": "[variables('script')]"
             }
         }
     ],
