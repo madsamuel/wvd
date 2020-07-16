@@ -62,8 +62,8 @@
     ],
     "outputs": {
         "result": {
-            "type": "String",
-            "value": "[reference('checkAzureCredentials').outputs.text]"
+            "type": "object",
+            "value": "[reference('checkAzureCredentials').outputs]"
         }
     }
 }
