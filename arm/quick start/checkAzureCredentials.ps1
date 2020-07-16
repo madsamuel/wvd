@@ -6,18 +6,30 @@ param(
 #region body
 Write-Output "Enter"
 
-#region install modules
-Write-Output "Install Modules"
-Import-Module AzureAD -Global
-#endregion
-
 $ErrorActionPreference = 'Stop'
 
-#region test creds
-Write-Output "Creds"
+#region find role
+foreach ($x in $assignment) { 
+    if ($x.RoleDefinitionName -eq "Owner") 
+        { $found = 1; break} 
+    Else
+        {$found = 0} }
 
-$Credential = New-Object System.Management.Automation.PsCredential($username, (ConvertTo-SecureString $password -AsPlainText -Force))
-Connect-AzureAD -AzureEnvironmentName 'AzureCloud' -Credential $Credential
+    Write-Output $found
+    Write-Output $password
+#endregion
+
+
+
+#region test creds
+#Write-Output "Creds"
+
+#$Credential = New-Object System.Management.Automation.PsCredential($username, (ConvertTo-SecureString $password -AsPlainText -Force))
+#Connect-AzureAD -AzureEnvironmentName 'AzureCloud' -Credential $Credential
+#endregion
+
+#region assignment
+#Get-AzUserAssignedIdentity -ResourceGroupName $ResourceGroupName -Name "$username"
 #endregion
 
 #endregion 
