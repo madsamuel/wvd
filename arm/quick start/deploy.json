@@ -3,43 +3,51 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "azureAdminUpn": {
-            "type": "string",
+            "defaultValue": "ssa@gt1101.onmicrosoft.com",
+            "type": "String",
             "metadata": {
                 "description": "The UPN of the account that you're currently logged in with on the Azure Portal. This account should at least have the 'contributor' or 'owner' role on the subscription level for the deployment to succeed. The template will fail if you enter a user account that requires MFA."
             }
         },
         "azureAdminPassword": {
-            "type": "securestring",
+            "type": "SecureString",
             "metadata": {
                 "description": "The password that corresponds to the Azure admin UPN above."
             }
         },
         "identity": {
-            "type": "string",
-            "defaultValue": "WVDServicePrincipal"
+            "defaultValue": "WVDServicePrincipal",
+            "type": "String"
         },
         "utcValue": {
-            "type": "string",
-            "defaultValue": "[utcNow()]"
+            "defaultValue": "[utcNow()]",
+            "type": "String"
         }
     },
     "variables": {
-       "_artifactsLocation": "https://github.com/madsamuel/wvd/tree/master/arm/quick%20start",
+        "_artifactsLocation": "https://raw.githubusercontent.com/madsamuel/wvd/master/arm/quick%20start/",
         "AdminPasswordSecret": "adminPassword",
-        "script": "[concat(variables('_artifactsLocation'),'checkAzureCredentials.ps1')]"
+        "script": "[concat(variables('_artifactsLocation'),'checkAzureCredentials.ps1')]",
+        "location": "[resourcegroup().location]"
     },
     "resources": [
+        {
+            "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+            "apiVersion": "2018-11-30",
+            "name": "[parameters('identity')]",
+            "location": "[variables('location')]",
+            "properties": {}
+        },
         {
             "type": "Microsoft.Resources/deploymentScripts",
             "apiVersion": "2019-10-01-preview",
             "name": "checkAzureCredentials",
             "location": "[resourceGroup().location]",
             "kind": "AzurePowerShell",
-            "identity": {   
+            "identity": {
                 "type": "userAssigned",
-                    "userAssignedIdentities": {
-                        "[parameters('identity')]": {
-                        }
+                "userAssignedIdentities": {
+                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities/', parameters('identity'))]": {}
                 }
             },
             "properties": {
@@ -55,8 +63,8 @@
     ],
     "outputs": {
         "result": {
-            "value": "[reference('checkAzureCredentials').outputs.text]",
-            "type": "string"
+            "type": "String",
+            "value": "[reference('checkAzureCredentials').outputs.text]"
         }
     }
 }
