@@ -42,7 +42,7 @@
             "apiVersion": "2019-10-01-preview",
             "name": "runPowerShellInline",
             "location": "[resourceGroup().location]",
-            "kind": "AzurePowerShell", // or "AzureCLI"
+            "kind": "AzurePowerShell",
             "identity": {
                 "type": "userAssigned",
                 "userAssignedIdentities": {
@@ -51,7 +51,7 @@
             },
             "properties": {
                 "forceUpdateTag": "[parameters('utcValue')]",               
-                "azPowerShellVersion": "3.0",  // or "azCliVersion": "2.0.80"
+                "azPowerShellVersion": "3.0", 
                 "arguments": "[concat(parameters('azureAdminUpn'), ' ', parameters('azureAdminPassword'))]",
                 "environmentVariables": [
                 {
@@ -65,7 +65,7 @@
                     Write-Output $output
                     $DeploymentScriptOutputs = @{}
                     $DeploymentScriptOutputs['text'] = $output
-                ", // or "primaryScriptUri": "https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/deployment-script/deploymentscript-helloworld.ps1",
+                ", 
                 "supportingScriptUris":[],
                 "timeout": "PT30M",
                 "cleanupPreference": "OnSuccess",
