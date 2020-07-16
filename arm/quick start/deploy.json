@@ -13,10 +13,17 @@
             "metadata": {
                 "description": "The password that corresponds to the Azure admin UPN above."
             }
+        },
+        "identity": {
+            "type": "string"
+        },
+        "utcValue": {
+            "type": "string",
+            "defaultValue": "[utcNow()]"
         }
     },
     "variables": {
-       "_artifactsLocation": "https://raw.githubusercontent.com/samvdjagt/dev/master",
+       "_artifactsLocation": "https://github.com/madsamuel/wvd/tree/master/arm/quick%20start",
         "AdminPasswordSecret": "adminPassword",
         "script": "[concat(variables('_artifactsLocation'),'checkAzureCredentials.ps1')]"
     },
@@ -27,27 +34,27 @@
             "name": "checkAzureCredentials",
             "location": "[resourceGroup().location]",
             "kind": "AzurePowerShell",
-            "identity": {
-        "type": "userAssigned",
-        "userAssignedIdentities": {
-          "[parameters('identity')]": {
-          }
-        }
-      },
+            "identity": {   
+                "type": "userAssigned",
+                    "userAssignedIdentities": {
+                    "[parameters('identity')]": {
+                    }
+                }
+            },
             "properties": {
                 "forceUpdateTag": "[parameters('utcValue')]",
                 "azPowerShellVersion": "3.0",
                 "timeout": "PT30M",
                 "retentionInterval": "P1D",
                 "cleanupPreference": "OnSuccess",
-                "arguments": "[parameters('passPhrase')]",
+                "arguments": "[parameters('azureAdminPassword')]",
                 "primaryScriptUri": "[parameters('script')]"
             }
         }
     ],
     "outputs": {
         "result": {
-            "value": "[reference('runPowerShellInlineWithOutput').outputs.text]",
+            "value": "[reference('checkAzureCredentials').outputs.text]",
             "type": "string"
         }
     }
