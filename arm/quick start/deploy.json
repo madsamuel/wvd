@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "azureAdminUpn": {
-            "defaultValue": "ssa@gt1101.onmicrosoft.com",
+            "defaultValue": "admin@gt1101.onmicrosoft.com",
             "type": "String",
             "metadata": {
                 "description": "The UPN of the account that you're currently logged in with on the Azure Portal. This account should at least have the 'contributor' or 'owner' role on the subscription level for the deployment to succeed. The template will fail if you enter a user account that requires MFA."
@@ -44,6 +44,7 @@
             "name": "checkAzureCredentials",
             "location": "[resourceGroup().location]",
             "kind": "AzurePowerShell",
+            "arguments": "[concat(variables('azureAdminUpn'), ' ', variables('azureAdminPassword'))]",
             "identity": {
                 "type": "userAssigned",
                 "userAssignedIdentities": {
