@@ -24,24 +24,20 @@ $ErrorActionPreference = 'Stop'
 
     #region connetc and test roles
     try {
-        # Connect-AzAccount -Credential $pscredential
+        Connect-AzAccount -Credential $pscredential
 
         $assignment = Get-AzRoleAssignment -SignInName $username
 
         foreach ($x in $assignment) { 
             if ($x.RoleDefinitionName -eq "Owner") 
             { 
-                $found = $success; 
                 $DeploymentScriptOutputs['text'] = $success
                 break;
             }         
         }
     }
     catch { 
-        $found = "Provided credentials are incorrect."
+        $DeploymentScriptOutputs['text'] = "Provided credentials are incorrect."
     }
     #endregion
-
-    $DeploymentScriptOutputs['text'] = $found
-  
 #endregion

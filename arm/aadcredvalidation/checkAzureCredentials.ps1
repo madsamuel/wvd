@@ -1,7 +1,7 @@
-﻿# @param
-$username = "admin@gt1101.onmicrosoft.com"
-# @param
-$password = ""
+param(
+	[string] [Parameter(Mandatory=$true)] $username,
+	[string] [Parameter(Mandatory=$true)] $password
+)
 
 #region string literals
 $failure = "Provided account is missing Owner role." 
@@ -24,7 +24,7 @@ $ErrorActionPreference = 'Stop'
 
     #region connetc and test roles
     try {
-        Connect-AzAccount -Credential $pscredential
+        # Connect-AzAccount -Credential $pscredential
 
         $assignment = Get-AzRoleAssignment -SignInName $username
 
@@ -32,16 +32,13 @@ $ErrorActionPreference = 'Stop'
             if ($x.RoleDefinitionName -eq "Owner") 
             { 
                 $found = $success; 
+                $DeploymentScriptOutputs['text'] = $success
                 break;
-            } 
-            Else
-            {
-                $found = $failure 
-            } 
+            }         
         }
     }
     catch { 
-        $found = $credFailure
+        $found = "Provided credentials are incorrect."
     }
     #endregion
 

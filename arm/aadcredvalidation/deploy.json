@@ -25,7 +25,7 @@
         }
     },
     "variables": {
-        "_artifactsLocation": "https://raw.githubusercontent.com/madsamuel/wvd/master/arm/quick%20start/",
+        "_artifactsLocation": "https://raw.githubusercontent.com/madsamuel/wvd/master/arm/aadcredvalidation/",
         "script": "[concat(variables('_artifactsLocation'),'checkAzureCredentials.ps1')]",
         "location": "[resourcegroup().location]"
     },
@@ -70,7 +70,7 @@
     "outputs": {
         "result": {
             "value": "[reference('runPowerShellInline').outputs.text]",
-            "type": "String"
-        }        
+            "type": "String"         
+        }
     }
 }
