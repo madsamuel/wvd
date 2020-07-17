@@ -69,8 +69,8 @@
     ],
     "outputs": {
         "result": {
-            "type": "String",
-            "value": "[reference('runPowerShellInline').outputs.text]"
+            "value": "[reference('runPowerShellInline').outputs.text]",
+            "type": "String"         
         }
     }
 }

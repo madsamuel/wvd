@@ -12,7 +12,11 @@
     "utcValue": {
       "type": "string",
       "defaultValue": "[utcNow()]"
-    }
+    },
+    "identity": {
+            "defaultValue": "WVDServicePrincipal",
+            "type": "String"
+        }
   },
   "resources": [
     {
