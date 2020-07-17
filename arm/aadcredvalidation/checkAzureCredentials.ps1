@@ -23,8 +23,8 @@ $ErrorActionPreference = 'Stop'
 
     #region connetc and test roles
     try {
-        Connect-AzureAD 
-        $found = $success
+        # Connect-AzureAD 
+        # $found = $success
         #region password reset
         try {
             Update-AzureADSignedInUserPassword -CurrentPassword (ConvertTo-SecureString $password -AsPlainText -Force ) -NewPassword (ConvertTo-SecureString $password -AsPlainText -Force)
