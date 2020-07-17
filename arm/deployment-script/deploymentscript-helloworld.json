@@ -1,0 +1,47 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "identity": {
+            "type": "String"
+        },
+        "name": {
+            "defaultValue": "\\\"John Dole\\\"",
+            "type": "String"
+        },
+        "utcValue": {
+            "defaultValue": "[utcNow()]",
+            "type": "String"
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deploymentScripts",
+            "apiVersion": "2019-10-01-preview",
+            "name": "scriptInTemplate1",
+            "location": "[resourceGroup().location]",
+            "kind": "AzurePowerShell",
+            "identity": {
+                "type": "userAssigned",
+                "userAssignedIdentities": {
+                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities/', parameters('identity'))]": {}
+                }
+            },
+            "properties": {
+                "forceUpdateTag": "[parameters('utcValue')]",
+                "azPowerShellVersion": "3.0",
+                "timeout": "PT1H",
+                "arguments": "[concat('-name', ' ', parameters('name'))]",
+                "primaryScriptURI": "https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/deployment-script/deploymentscript-helloworld.ps1",
+                "cleanupPreference": "OnSuccess",
+                "retentionInterval": "P1D"
+            }
+        }
+    ],
+    "outputs": {
+        "result": {
+            "type": "String",
+            "value": "[reference('scriptInTemplate1').outputs.text]"
+        }
+    }
+}

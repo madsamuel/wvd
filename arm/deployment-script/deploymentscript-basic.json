@@ -1,0 +1,84 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "identity": {
+      "type": "string"
+    },
+    "name":{
+      "type":"string"
+    },
+    "utcValue": {
+      "type": "string",
+      "defaultValue": "[utcNow()]"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/deploymentScripts",
+      "apiVersion": "2019-10-01-preview",
+      "name": "scriptInTemplate1",
+      "location": "[resourceGroup().location]",
+      "kind": "AzurePowerShell",
+      "identity": {
+        "type": "userAssigned",
+        "userAssignedIdentities": {
+          "[parameters('identity')]": {
+          }
+        }
+      },
+      "properties": {
+        "forceUpdateTag": "[parameters('utcValue')]",
+        "azPowerShellVersion": "3.0",
+        "timeout": "PT1H",
+        "arguments": "[concat('-name', ' ', parameters('name'))]",
+        "scriptContent": "
+          param([string] $name)
+          $output = 'Hello {0}' -f $name
+          Write-Output $output
+          $DeploymentScriptOutputs = @{}
+          $DeploymentScriptOutputs['text'] = $output
+        ",
+        "cleanupPreference": "Always",
+        "retentionInterval": "P1D"
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deploymentScripts",
+      "apiVersion": "2019-10-01-preview",
+      "name": "scriptInTemplate2",
+      "location": "[resourceGroup().location]",
+      "kind": "AzurePowerShell",
+      "identity": {
+        "type": "userAssigned",
+        "userAssignedIdentities": {
+          "[parameters('identity')]": {
+          }
+        }
+      },
+      "dependsOn": [
+        "scriptInTemplate1"
+      ],
+      "properties": {
+        "forceUpdateTag": "[parameters('utcValue')]",
+        "azPowerShellVersion": "3.0",
+        "timeout": "PT1H",
+        "arguments": "[concat('-textToEcho', ' ', reference('scriptInTemplate1').outputs.text)]",
+        "scriptContent": "
+          param([string] $textToEcho)
+          Write-Output $textToEcho
+          $DeploymentScriptOutputs = @{}
+          $DeploymentScriptOutputs['text'] = $textToEcho
+        ",
+        "cleanupPreference": "Always",
+        "retentionInterval": "P1D"
+      }
+    }
+  ],
+  "outputs": {
+    "result": {
+      "value": "[reference('scriptInTemplate2').outputs.text]",
+      "type": "string"
+    }
+  }
+}

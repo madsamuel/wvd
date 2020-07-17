@@ -15,8 +15,8 @@ foreach ($x in $assignment) {
     Else
         {$found = 0} }
 
-    Write-Host $found
-    Write-Host $password
+    $DeploymentScriptOutputs = @{}
+    $DeploymentScriptOutputs['text'] = $found
 #endregion
 
 
