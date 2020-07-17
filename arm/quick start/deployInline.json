@@ -25,7 +25,7 @@
         }
     },
     "variables": {
-        "_artifactsLocation": "https://raw.githubusercontent.com/madsamuel/wvd/master/arm/quick%20start/",        
+        "_artifactsLocation": "https://raw.githubusercontent.com/madsamuel/wvd/master/arm/quick%20start/",
         "script": "[concat(variables('_artifactsLocation'),'checkAzureCredentials.ps1')]",
         "location": "[resourcegroup().location]"
     },
@@ -50,29 +50,27 @@
                 }
             },
             "properties": {
-                "forceUpdateTag": "[parameters('utcValue')]",               
-                "azPowerShellVersion": "3.0", 
+                "forceUpdateTag": "[parameters('utcValue')]",
+                "azPowerShellVersion": "3.0",
                 "arguments": "[concat(parameters('azureAdminUpn'), ' ', parameters('azureAdminPassword'))]",
                 "environmentVariables": [
-                {
-                    "name": "someSecret",
-                    "secureValue": "if this is really a secret, don't put it here... in plain text..."
-                }
+                    {
+                        "name": "someSecret",
+                        "secureValue": "if this is really a secret, don't put it here... in plain text..."
+                    }
                 ],
-                "scriptContent": "
-                    param([string] $name)
-                    $output = 'Hello {0}' -f $name
-                    Write-Output $output
-                    $DeploymentScriptOutputs = @{}
-                    $DeploymentScriptOutputs['text'] = $output
-                ", 
-                "supportingScriptUris":[],
+                "scriptContent": "[string] [Parameter(Mandatory=$true)] $username, [string] [Parameter(Mandatory=$true)] $password; $ErrorActionPreference = 'Stop'; Write-Host 'Waiting for certificate creation completion...';$DeploymentScriptOutputs = @{};$DeploymentScriptOutputs['test'] = 'test';",
+                "supportingScriptUris": [],
                 "timeout": "PT30M",
                 "cleanupPreference": "OnSuccess",
                 "retentionInterval": "P1D"
             }
         }
     ],
-    "outputs": {        
+    "outputs": {
+        "results": {
+            "value": "[reference('runPowerShellInline').outputs.text]",
+            "type": "string"
+        }
     }
 }
