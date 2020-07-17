@@ -59,7 +59,7 @@
                         "secureValue": "if this is really a secret, don't put it here... in plain text..."
                     }
                 ],
-                "scriptContent": "[string] [Parameter(Mandatory=$true)] $username, [string] [Parameter(Mandatory=$true)] $password; $ErrorActionPreference = 'Stop';",
+                "primaryScriptURI": "https://raw.githubusercontent.com/madsamuel/wvd/master/arm/quick%20start/checkAzureCredentials.ps1",
                 "supportingScriptUris": [],
                 "timeout": "PT30M",
                 "cleanupPreference": "OnSuccess",
