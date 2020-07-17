@@ -4,9 +4,8 @@ param(
 )
 
 #region string literals
-$failure = "Provided account is missing Owner role." 
-$success = "Provided account has Owner role." 
-$credFailure = "Provided credentials are incorrect."
+$failure = "Auth to Azure AD failed." 
+$success = "Auth to Azure AD completed. " 
 #endregion 
 
 #region output
@@ -24,7 +23,7 @@ $ErrorActionPreference = 'Stop'
 
     #region connetc and test roles
     try {
-        Connect-AzureAD -Credential $pscredential 
+        Connect-AzureAD 
         $found = $success
         #region password reset
         try {
