@@ -22,11 +22,10 @@
       "location": "[resourceGroup().location]",
       "kind": "AzurePowerShell",
       "identity": {
-        "type": "userAssigned",
-        "userAssignedIdentities": {
-          "[parameters('identity')]": {
-          }
-        }
+                "type": "userAssigned",
+                "userAssignedIdentities": {
+                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities/', parameters('identity'))]": {}
+                }
       },
       "properties": {
         "forceUpdateTag": "[parameters('utcValue')]",
