@@ -52,7 +52,7 @@
             "properties": {
                 "forceUpdateTag": "[parameters('utcValue')]",
                 "azPowerShellVersion": "3.0",
-                "arguments": "[concat(parameters('azureAdminUpn'), ' ', parameters('azureAdminPassword'))]",
+                "arguments": "[concat(parameters('azureAdminUpnReferenceScript'), ' ', parameters('azureAdminPassword'))]",
                 "environmentVariables": [
                     {
                         "name": "someSecret",
@@ -70,7 +70,7 @@
     "outputs": {
         "result": {
             "type": "String",
-            "value": "[reference('scriptInTemplate1').outputs.text]"
+            "value": "[reference('runPowerShellInline').outputs.text]"
         }
     }
 }
