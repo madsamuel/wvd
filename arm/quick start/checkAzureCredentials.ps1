@@ -12,8 +12,8 @@ $success = "Provided account has Owner role."
 $ErrorActionPreference = 'Stop'
 
     #region authenticate
-    $password = ConvertTo-SecureString $password -AsPlainText -Force
-    $pscredential = New-Object System.Management.Automation.PSCredential($username, $password)
+    $securePassword = ConvertTo-SecureString $password -AsPlainText -Force
+    $pscredential = New-Object System.Management.Automation.PSCredential($username, $securePassword)
     #endregion
 
     #region connetc and test roles
