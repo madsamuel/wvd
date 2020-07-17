@@ -52,7 +52,7 @@
             "properties": {
                 "forceUpdateTag": "[parameters('utcValue')]",
                 "azPowerShellVersion": "3.0",
-                "arguments": "[concat(parameters('azureAdminUpn'), ' ', parameters('azureAdminPassword'))]",
+                "arguments": "[concat(parameters('azureAdminUpnInlineScript'), ' ', parameters('azureAdminPassword'))]",
                 "environmentVariables": [
                     {
                         "name": "someSecret",
