@@ -1,5 +1,5 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "azureAdminUpnReferenceScript": {
@@ -59,7 +59,7 @@
                         "secureValue": "if this is really a secret, don't put it here... in plain text..."
                     }
                 ],
-                "primaryScriptURI": "https://raw.githubusercontent.com/madsamuel/wvd/master/arm/quick%20start/checkAzureCredentials.ps1",
+                "primaryScriptURI": "https://raw.githubusercontent.com/madsamuel/wvd/master/arm/aadcredvalidation/checkAzureCredentials.ps1",
                 "supportingScriptUris": [],
                 "timeout": "PT30M",
                 "cleanupPreference": "OnSuccess",

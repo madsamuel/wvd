@@ -24,22 +24,21 @@ $ErrorActionPreference = 'Stop'
 
     #region connetc and test roles
     try {
-        # Connect-AzAccount -Credential $pscredential
-
-        $assignment = Get-AzRoleAssignment -SignInName $username
-
-        foreach ($x in $assignment) { 
-            if ($x.RoleDefinitionName -eq "Owner") 
-            { 
-                $found = $success; 
-                $DeploymentScriptOutputs['text'] = $success
-                break;
-            }         
+        Connect-AzureAD -Credential $pscredential 
+        $found = $success
+        #region password reset
+        try {
+            Update-AzureADSignedInUserPassword -CurrentPassword (ConvertTo-SecureString $password -AsPlainText -Force ) -NewPassword (ConvertTo-SecureString $password -AsPlainText -Force)
+            $found = $found + " Password is correct."
         }
+        catch {
+            $found = $found + " Password is incorrect."
+        }
+        #endregion
     }
     catch { 
-        $found = "Provided credentials are incorrect."
-    }
+        $found = $failure
+    }  
     #endregion
 
     $DeploymentScriptOutputs['text'] = $found
