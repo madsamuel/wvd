@@ -6,7 +6,13 @@ param(
 #region string literals
 $failure = "Provided account is missing Owner role." 
 $success = "Provided account has Owner role." 
+$credFailure = ""
 #endregion 
+
+#region output
+$DeploymentScriptOutputs = @{}
+
+#endregion
 
 #region body
 $ErrorActionPreference = 'Stop'
@@ -24,18 +30,21 @@ $ErrorActionPreference = 'Stop'
 
         foreach ($x in $assignment) { 
             if ($x.RoleDefinitionName -eq "Owner") 
-                { $found = $success; break} 
+            { 
+                $found = $success; 
+                break;
+            } 
             Else
-            {$found = $failure } 
+            {
+                $found = $failure 
+            } 
         }
     }
     catch { 
-        $found = "Provided account is missing Owner role."
+        $found = "Provided credentials are incorrect."
     }
     #endregion
 
-    #region output
-    $DeploymentScriptOutputs = @{}
     $DeploymentScriptOutputs['text'] = $found
-    #endregion
+  
 #endregion

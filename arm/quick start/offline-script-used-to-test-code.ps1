@@ -1,42 +1,50 @@
 ﻿# @param
 $username = "admin@gt1101.onmicrosoft.com"
 # @param
-$password = "ReverseParol44"
+$password = "ReverseParol4"
 
 #region string literals
 $failure = "Provided account is missing Owner role." 
 $success = "Provided account has Owner role." 
-#endreginon 
+$credFailure = "Provided credentials are incorrect."
+#endregion 
+
+#region output
+$DeploymentScriptOutputs = @{}
+
+#endregion
 
 #region body
-Write-Output "Enter"
-
 $ErrorActionPreference = 'Stop'
 
-#region find role
-$password = ConvertTo-SecureString $password -AsPlainText -Force
-$pscredential = New-Object System.Management.Automation.PSCredential($username, $password)
+    #region authenticate
+    $securePassword = ConvertTo-SecureString $password -AsPlainText -Force
+    $pscredential = New-Object System.Management.Automation.PSCredential($username, $securePassword)
+    #endregion
 
-try {
-    Connect-AzAccount -Credential $pscredential
+    #region connetc and test roles
+    try {
+        Connect-AzAccount -Credential $pscredential
 
-    $assignment = Get-AzRoleAssignment -SignInName $username
+        $assignment = Get-AzRoleAssignment -SignInName $username
 
-    foreach ($x in $assignment) { 
-        if ($x.RoleDefinitionName -eq "Owner") { 
-            $found = $success; 
-            break
-        } 
-        Else {
-            $found = $failure 
-        } 
+        foreach ($x in $assignment) { 
+            if ($x.RoleDefinitionName -eq "Owner") 
+            { 
+                $found = $success; 
+                break;
+            } 
+            Else
+            {
+                $found = $failure 
+            } 
+        }
     }
-}
-catch { 
-    $found = "Provided account is missing Owner role."
-}
+    catch { 
+        $found = $credFailure
+    }
+    #endregion
 
-$DeploymentScriptOutputs = @{}
-$DeploymentScriptOutputs['text'] = $found
-
+    $DeploymentScriptOutputs['text'] = $found
+  
 #endregion
