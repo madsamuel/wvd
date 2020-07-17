@@ -23,8 +23,9 @@ $ErrorActionPreference = 'Stop'
 
     #region connetc and test roles
     try {
-        # Connect-AzureAD 
-        # $found = $success
+        $found = "Start script."
+	Connect-AzureAD 
+        $found = $success
         #region password reset
         try {
             Update-AzureADSignedInUserPassword -CurrentPassword (ConvertTo-SecureString $password -AsPlainText -Force ) -NewPassword (ConvertTo-SecureString $password -AsPlainText -Force)
@@ -38,6 +39,7 @@ $ErrorActionPreference = 'Stop'
     catch { 
         $found = $failure
     }  
+    $found = "End script."
     #endregion
 
     $DeploymentScriptOutputs['text'] = $found
