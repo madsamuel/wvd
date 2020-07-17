@@ -25,7 +25,7 @@
         }
     },
     "variables": {
-        "_artifactsLocation": "https://raw.githubusercontent.com/madsamuel/wvd/master/arm/quick%20start/",        
+        "_artifactsLocation": "https://raw.githubusercontent.com/madsamuel/wvd/master/arm/quick%20start/",
         "script": "[concat(variables('_artifactsLocation'),'checkAzureCredentials.ps1')]",
         "location": "[resourcegroup().location]"
     },
@@ -40,7 +40,7 @@
         {
             "type": "Microsoft.Resources/deploymentScripts",
             "apiVersion": "2019-10-01-preview",
-            "name": "checkAzureCredentials",
+            "name": "runPowerShellInline",
             "location": "[resourceGroup().location]",
             "kind": "AzurePowerShell",
             "identity": {
@@ -52,14 +52,20 @@
             "properties": {
                 "forceUpdateTag": "[parameters('utcValue')]",
                 "azPowerShellVersion": "3.0",
-                "timeout": "PT30M",
-                "retentionInterval": "P1D",
-                "cleanupPreference": "OnSuccess",
                 "arguments": "[concat(parameters('azureAdminUpn'), ' ', parameters('azureAdminPassword'))]",
-                "primaryScriptUri": "[variables('script')]"
+                "environmentVariables": [
+                    {
+                        "name": "someSecret",
+                        "secureValue": "if this is really a secret, don't put it here... in plain text..."
+                    }
+                ],
+                "scriptContent": "[string] [Parameter(Mandatory=$true)] $username, [string] [Parameter(Mandatory=$true)] $password; $ErrorActionPreference = 'Stop';",
+                "supportingScriptUris": [],
+                "timeout": "PT30M",
+                "cleanupPreference": "OnSuccess",
+                "retentionInterval": "P1D"
             }
         }
     ],
-    "outputs": {        
-    }
+    "outputs": {}
 }

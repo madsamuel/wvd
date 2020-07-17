@@ -15,8 +15,8 @@ foreach ($x in $assignment) {
     Else
         {$found = 0} }
 
-    Write-Output $found
-    Write-Output $password
+    Write-Host $found
+    Write-Host $password
 #endregion
 
 
