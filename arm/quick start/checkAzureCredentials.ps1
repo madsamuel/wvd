@@ -6,7 +6,7 @@ param(
 #region string literals
 $failure = "Provided account is missing Owner role." 
 $success = "Provided account has Owner role." 
-$credFailure = ""
+$credFailure = "Provided credentials are incorrect."
 #endregion 
 
 #region output
@@ -24,7 +24,7 @@ $ErrorActionPreference = 'Stop'
 
     #region connetc and test roles
     try {
-        Connect-AzAccount -Credential $pscredential
+        # Connect-AzAccount -Credential $pscredential
 
         $assignment = Get-AzRoleAssignment -SignInName $username
 
@@ -32,12 +32,9 @@ $ErrorActionPreference = 'Stop'
             if ($x.RoleDefinitionName -eq "Owner") 
             { 
                 $found = $success; 
+                $DeploymentScriptOutputs['text'] = $success
                 break;
-            } 
-            Else
-            {
-                $found = $failure 
-            } 
+            }         
         }
     }
     catch { 
