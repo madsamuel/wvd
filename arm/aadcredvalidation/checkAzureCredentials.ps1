@@ -24,7 +24,8 @@ $ErrorActionPreference = 'Stop'
     #region connetc and test roles
     try {
         $found = "Start script."
-	Connect-AzureAD 
+    
+        Connect-AzureAD -Credential $pscredential
         $found = $success
         #region password reset
         try {
