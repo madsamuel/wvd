@@ -2,7 +2,7 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "azureAdminUpnForValidatingCredentials": {
+        "azureAdminUpnForValidating": {
             "defaultValue": "admin@gt1101.onmicrosoft.com",
             "type": "String",
             "metadata": {
@@ -52,7 +52,7 @@
             "properties": {
                 "forceUpdateTag": "[parameters('utcValue')]",
                 "azPowerShellVersion": "3.0",
-                "arguments": "[concat(parameters('azureAdminUpnReferenceScript'), ' ', parameters('azureAdminPassword'))]",
+                "arguments": "[concat(parameters('azureAdminUpnForValidating'), ' ', parameters('azureAdminPassword'))]",
                 "environmentVariables": [
                     {
                         "name": "someSecret",
