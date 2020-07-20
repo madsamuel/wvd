@@ -1,48 +1,50 @@
-﻿# @param
-$username = "admin@gt1101.onmicrosoft.com"
-# @param
-$password = ""
+﻿#region credentials
+$securePassword = ConvertTo-SecureString "10" -AsPlainText -Force
+$pscredential = New-Object System.Management.Automation.PSCredential("ssa", $securePassword)
 
-Import-Module AzureAD
-
-#region string literals
-$failure = "Auth to Azure AD failed." 
-$success = "Auth to Azure AD completed. " 
-#endregion 
-
-#region output
-$DeploymentScriptOutputs = @{}
-
+#Connect-AzureAD -Credential $pscredential
 #endregion
 
-#region body
-$ErrorActionPreference = 'Stop'
+try {
+    $sess = New-PSSession -ComputerName "AdvM" -Credential $pscredential 
 
-    #region authenticate
-    # do not need this as I am alread runnign in the context of an admin 
-     $securePassword = ConvertTo-SecureString $password -AsPlainText -Force
-     $pscredential = New-Object System.Management.Automation.PSCredential($username, $securePassword)
-    #endregion
+    $output = Invoke-command  -session $sess -scriptblock {
+        [Net.ServicePointManager]::SecurityProtocol = "tls12"
+        Install-Module AzureAD -Force
+        Import-Module AzureAD -Force 
 
-    #region connetc and test roles
-    try {
-        Connect-AzureAD -Credential $pscredential 
-        $found = $success
-        #region password reset
+        Write-Output "Start script."    
+        f
         try {
-            Update-AzureADSignedInUserPassword -CurrentPassword (ConvertTo-SecureString $password -AsPlainText -Force ) -NewPassword (ConvertTo-SecureString $password -AsPlainText -Force)
-            $found = $found + " Password is correct."
+            Connect-AzureAD -Credential $Using:pscredential -
+            Write-Output "Authenticated."        
         }
+        catch
+        {
+            Write-Output "Incorrect credentials."
+        }
+
+        try {
+                Update-AzureADSignedInUserPassword -CurrentPassword $Using:securePassword -NewPassword $Using:securePassword 
+                Write-Output "`n Password is correct."
+            }
         catch {
-            $found = $found + " Password is incorrect."
+            Write-Output "`nPassword is incorrect."
         }
-        #endregion
-    }
-    catch { 
-        $found = $failure
-    }  
-    #endregion
-    
-    $DeploymentScriptOutputs['text'] = $found
-  
-#endregion
+} 
+
+Disconnect-PSSession -session $sess 
+
+$Events = Select-String -InputObject $output -Pattern 'Password is correct'
+if ($Events -like "*Password is correct*") {
+    # write to outpot obj
+    Write-Output "Good"    
+} else {
+    Write-Output "Bad"    
+}
+
+}
+catch {
+    Write-Output "Bad"   
+}
+
