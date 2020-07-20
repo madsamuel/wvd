@@ -14,7 +14,7 @@ try {
         Import-Module AzureAD -Force 
 
         Write-Output "Start script."    
-        f
+        
         try {
             Connect-AzureAD -Credential $Using:pscredential -
             Write-Output "Authenticated."        
@@ -31,20 +31,19 @@ try {
         catch {
             Write-Output "`nPassword is incorrect."
         }
-} 
+    } 
 
-Disconnect-PSSession -session $sess 
+    Disconnect-PSSession -session $sess 
 
-$Events = Select-String -InputObject $output -Pattern 'Password is correct'
-if ($Events -like "*Password is correct*") {
-    # write to outpot obj
-    Write-Output "Good"    
-} else {
-    Write-Output "Bad"    
-}
-
+    $Events = Select-String -InputObject $output -Pattern 'Password is correct'
+    
+    if ($Events -like "*Password is correct*") {
+        # write to outpot obj
+        Write-Output "Good"    
+    } else {
+        Write-Output "Bad"    
+    }
 }
 catch {
     Write-Output "Bad"   
 }
-
