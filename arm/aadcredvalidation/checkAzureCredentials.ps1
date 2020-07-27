@@ -7,7 +7,7 @@ $found
 $DeploymentScriptOutputs = @{}
 
 #region body
-$ErrorActionPreference = 'Stop'
+    $ErrorActionPreference = 'Stop'
 
     #region credential 
     $securePassword = ConvertTo-SecureString $password -AsPlainText -Force
@@ -16,7 +16,7 @@ $ErrorActionPreference = 'Stop'
 
     #region connetc and test roles
     try {
-        $sess = New-PSSession -ComputerName "AdvM" -Credential $pscredential 
+        $sess = New-PSSession -ComputerName "advm" -Credential $pscredential -ErrorAction Continue
 
         $output = Invoke-command  -session $sess -scriptblock {
             [Net.ServicePointManager]::SecurityProtocol = "tls12"
@@ -26,7 +26,7 @@ $ErrorActionPreference = 'Stop'
             Write-Output "Start script."    
             
             try {
-                Connect-AzureAD -Credential $Using:pscredential -
+                Connect-AzureAD -Credential $Using:pscredential 
                 Write-Output "Authenticated."        
             }
             catch

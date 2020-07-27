@@ -5,6 +5,9 @@ $pscredential = New-Object System.Management.Automation.PSCredential("ssa", $sec
 #Connect-AzureAD -Credential $pscredential
 #endregion
 
+
+
+
 try {
     $sess = New-PSSession -ComputerName "AdvM" -Credential $pscredential 
 
