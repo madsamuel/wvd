@@ -1,0 +1,48 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "identity": {
+		"defaultValue": "WVDServicePrincipal",
+    	"type": "string"
+    },
+    "name":{
+    	"type": "string",
+    	"defaultValue": "\\\"John Dole\\\""
+    },
+    "utcValue": {
+    	"type": "string",
+    	"defaultValue": "[utcNow()]"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/deploymentScripts",
+      "apiVersion": "2019-10-01-preview",
+      "name": "runPowerShellInlineWithOutput",
+      "location": "[resourceGroup().location]",
+      "kind": "AzurePowerShell",
+      "identity": {
+                "type": "userAssigned",
+                "userAssignedIdentities": {
+                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities/', parameters('identity'))]": {}
+                }
+      },
+      "properties": {
+        "forceUpdateTag": "[parameters('utcValue')]",
+        "azPowerShellVersion": "3.0",
+        "scriptContent": "\n param([string] $name) \n $output = \"Hello {0}\" -f $name \n Write-Output $output \n $DeploymentScriptOutputs = @{} \n $DeploymentScriptOutputs['text'] = $output",
+        "arguments": "[concat('-name', ' ', parameters('name'))]",
+        "timeout": "PT1H",
+        "cleanupPreference": "OnSuccess",
+        "retentionInterval": "P1D"
+      }
+    }
+  ],
+  "outputs": {
+    "result": {
+      "value": "[reference('runPowerShellInlineWithOutput').outputs.text]",
+      "type": "string"
+    }
+  }
+}

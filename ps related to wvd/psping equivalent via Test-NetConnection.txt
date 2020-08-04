@@ -1,0 +1,3 @@
+# azure runbook using Test-NetConnection to validate if WVD endpoints are accessible
+# part of validation the input parameters for WVD quick start
+test-netconnection rdbroker.wvdselfhost.microsoft.com -port 443
