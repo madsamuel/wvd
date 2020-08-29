@@ -39,7 +39,7 @@
                 },
                 "variables": {
                         "baseUri": "https://raw.githubusercontent.com/madsamuel/wvd/master/azure%20files%20ad%20join/",
-                        "cseName": "[concat(parameters('timestamp'),'/','customscript')]",
+                        "cseName": "[concat(parameters('domainControlerVM'),'/','customscript')]",
                         "resourceGroupName": "[resourcegroup().name]"
                 },
                 "resources": [
@@ -68,7 +68,7 @@
         ],
                 "outputs": {
                         "instanceView": {
-                                "value": "[reference( resourceId('Microsoft.Compute/virtualMachines/extensions', parameters('domainControlerVM'),'domainControlerVM')).instanceView]",
+                                "value": "[reference( resourceId('Microsoft.Compute/virtualMachines/extensions', parameters('domainControlerVM'),'customscript')).instanceView]",
                                 "type": "object"
                         }
                 }
