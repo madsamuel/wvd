@@ -2,12 +2,12 @@
         "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
                 "contentVersion": "1.0.0.0",
                 "parameters": {
-                        "resourceGroupName": {
+                        "domainControlerVM": {
                                 "type": "string",
                                 "metadata": {
-                                        "description": "The resource group containing the storage account. 1"
+                                        "description": "DC."
                                 },
-                                "defaultValue": "0703v7rg"
+                                "defaultValue": "adVM"
                         },
                         "storageAccount": {
                                 "type": "string",
@@ -39,7 +39,8 @@
                 },
                 "variables": {
                         "baseUri": "https://raw.githubusercontent.com/madsamuel/wvd/master/azure%20files%20ad%20join/",
-                        "cseName": "[concat(parameters('timestamp'),'/','customscript')]"
+                        "cseName": "[concat(parameters('timestamp'),'/','customscript')]",
+                        "resourceGroupName": "[resourcegroup().name]"
                 },
                 "resources": [
                 {
@@ -60,14 +61,14 @@
                                         "timestamp":"[parameters('timestamp')]"
                                 },
                                 "protectedSettings": {
-                                        "commandToExecute":"[concat('powershell -ExecutionPolicy Unrestricted -File setup.ps1 -RG ', parameters('resourceGroupName'),' -S', parameters('storageAccount'),' -U', parameters('adminUserName'), ' -P', parameters('adminPassword'))]"
+                                        "commandToExecute":"[concat('powershell -ExecutionPolicy Unrestricted -File setup.ps1 -RG ', variables('resourceGroupName'),' -S', parameters('storageAccount'),' -U', parameters('adminUserName'), ' -P', parameters('adminPassword'))]"
                                 }
                         }
                 }
         ],
                 "outputs": {
                         "instanceView": {
-                                "value": "[reference( resourceId('Microsoft.Compute/virtualMachines/extensions', parameters('resourceGroupName'),'customscript')).instanceView]",
+                                "value": "[reference( resourceId('Microsoft.Compute/virtualMachines/extensions', parameters('domainControlerVM'),'domainControlerVM')).instanceView]",
                                 "type": "object"
                         }
                 }
