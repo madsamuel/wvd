@@ -5,7 +5,7 @@
                         "resourceGroupName": {
                                 "type": "string",
                                 "metadata": {
-                                        "description": "The resource group containing the storage account."
+                                        "description": "The resource group containing the storage account. 1"
                                 },
                                 "defaultValue": "0703v7rg"
                         },
