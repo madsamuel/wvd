@@ -6,22 +6,25 @@
                                 "type": "string",
                                 "metadata": {
                                         "description": "The resource group containing the storage account."
-                                }
+                                },
+                                "defaultValue": "0703v7rg"
                         },
                         "storageAccount": {
                                 "type": "string",
                                 "metadata": {
                                         "description": "Storage account name."
-                                }
+                                },
+                                "defaultValue": "devstoreliigrzf4zcaxi"
                         },
                         "adminUserName": {
                                 "type": "string",
                                 "metadata": {
                                         "description": "Admin user name, no UPNs. For example, ssa. "
-                                }
+                                },
+                                "defaultValue":"ssa@gt090617.onmicrosoft.com"
                         },
                         "adminPassword": {
-                                "type": "string",
+                                "type": "secureString",
                                 "metadata": {
                                         "description": "Admin password."
                                 }
@@ -36,7 +39,7 @@
                 },
                 "variables": {
                         "baseUri": "https://raw.githubusercontent.com/madsamuel/wvd/master/azure%20files%20ad%20join/",
-                        "cseName": "[concat(parameters('vmName'),'/','customscript')]"
+                        "cseName": "[concat(parameters('timestamp'),'/','customscript')]"
                 },
                 "resources": [
                 {
@@ -51,7 +54,7 @@
                                 "autoUpgradeMinorVersion": true,
                                 "settings": {
                                         "fileUris": [
-                                                "[concat(variables('baseUri'),'FSLogix_Apps.zip')]",
+                                                "[concat(variables('baseUri'),'Artefacts.zip')]",
                                                 "[concat(variables('baseUri'),'setup.ps1')]"                                                                                               
                                                 ],
                                         "timestamp":"[parameters('timestamp')]"

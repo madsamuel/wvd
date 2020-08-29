@@ -1,6 +1,6 @@
 # Create storage account 
 
-# Join sotrage account to DC
+# Join storage account to DC
 
 
 Information on the above is available in the WVD documentation here [article](https://docs.microsoft.com/en-us/azure/virtual-desktop/create-host-pools-user-profile).
