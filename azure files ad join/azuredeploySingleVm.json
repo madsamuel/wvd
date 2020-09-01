@@ -46,7 +46,7 @@
                 },
                 "variables": {
                         "baseUri": "https://raw.githubusercontent.com/madsamuel/wvd/master/azure%20files%20ad%20join/",
-                        "cseName": "[concat(parameters('domainControlerVM'),'/','customscript')]",
+                        "cseName": "[concat(parameters('domainControlerVM'),'/','dcJoinStorageAccount')]",
                         "resourceGroupName": "[resourcegroup().name]",
                         "subscriptionGUID": "[subscription()]"
                 },
@@ -69,14 +69,14 @@
                                         "timestamp":"[parameters('timestamp')]"
                                 },
                                 "protectedSettings": {
-                                        "commandToExecute":"[concat('powershell -ExecutionPolicy Unrestricted -File setup.ps1 -resourceGroup ', variables('resourceGroupName'),' -storageAccount', parameters('storageAccount'),' -dcAdminUserName', parameters('adminUserName'), ' -dcAdminPassword', parameters('adminPassword'), ' -subscriptionGUID ', variables('subscriptionGUID'), ' -domainName ', parameters('domainName'))]"
+                                        "commandToExecute":"[concat('powershell -ExecutionPolicy Unrestricted -File setup.ps1 -resourceGroup ', variables('resourceGroupName'),' -storageAccount ', parameters('storageAccount'),' -dcAdminUserName ', parameters('adminUserName'), ' -dcAdminPassword ', parameters('adminPassword'), ' -subscriptionGUID ', variables('subscriptionGUID'), ' -domainName ', parameters('domainName'))]"
                                 }
                         }
                 }
         ],
                 "outputs": {
                         "instanceView": {
-                                "value": "[reference( resourceId('Microsoft.Compute/virtualMachines/extensions', parameters('domainControlerVM'),'customscript')).instanceView]",
+                                "value": "[reference( resourceId('Microsoft.Compute/virtualMachines/extensions', parameters('domainControlerVM'),'dcJoinStorageAccount')).instanceView]",
                                 "type": "object"
                         }
                 }
