@@ -69,7 +69,7 @@
                                         "timestamp":"[parameters('timestamp')]"
                                 },
                                 "protectedSettings": {
-                                        "commandToExecute":"[concat('powershell -ExecutionPolicy Unrestricted -File setup.ps1 -resourceGroup ', variables('resourceGroupName'),' -storageAccount', parameters('storageAccount'),' -dcAdminUserName', parameters('adminUserName'), ' -dcAdminPassword', parameters('adminPassword'), ' -subscriptionGUID ', variables('subscriptionGUID'), '-domainName ', parameters('domainName'))]"
+                                        "commandToExecute":"[concat('powershell -ExecutionPolicy Unrestricted -File setup.ps1 -resourceGroup ', variables('resourceGroupName'),' -storageAccount', parameters('storageAccount'),' -dcAdminUserName', parameters('adminUserName'), ' -dcAdminPassword', parameters('adminPassword'), ' -subscriptionGUID ', variables('subscriptionGUID'), ' -domainName ', parameters('domainName'))]"
                                 }
                         }
                 }
