@@ -40,7 +40,8 @@
                 "variables": {
                         "baseUri": "https://raw.githubusercontent.com/madsamuel/wvd/master/azure%20files%20ad%20join/",
                         "cseName": "[concat(parameters('domainControlerVM'),'/','customscript')]",
-                        "resourceGroupName": "[resourcegroup().name]"
+                        "resourceGroupName": "[resourcegroup().name]",
+                        "subscriptionGUID": "[subscription()]"
                 },
                 "resources": [
                 {
@@ -61,7 +62,7 @@
                                         "timestamp":"[parameters('timestamp')]"
                                 },
                                 "protectedSettings": {
-                                        "commandToExecute":"[concat('powershell -ExecutionPolicy Unrestricted -File setup.ps1 -RG ', variables('resourceGroupName'),' -S', parameters('storageAccount'),' -U', parameters('adminUserName'), ' -P', parameters('adminPassword'))]"
+                                        "commandToExecute":"[concat('powershell -ExecutionPolicy Unrestricted -File setup.ps1 -resourceGroup ', variables('resourceGroupName'),' -storageAccount', parameters('storageAccount'),' -dcAdminUserName', parameters('adminUserName'), ' -dcAdminPassword', parameters('adminPassword'), ' -subscriptionGUID ', variables('subscriptionGUID'))]"
                                 }
                         }
                 }

@@ -1,6 +1,4 @@
-
-<#
-.SYNOPSIS
+<#.SYNOPSIS
 Enables Azure Files for a native AD environment, executing the domain join of the storage account using the AzFilesHybrid module.
 Parameter names have been abbreviated to shorten the 'PSExec' command, which has a limited number of allowed characters.
 
@@ -16,24 +14,33 @@ Azure admin UPN
 .PARAMETER P
 Azure admin password
 
+.PARAMETER 
+
 #>
 
 param(    
-
+    [Parameter(Mandatory = $true)]
+    [string] $resourceGroup,
 
     [Parameter(Mandatory = $true)]
-    [string] $RG,
+    [string] $storageAccount,
 
     [Parameter(Mandatory = $true)]
-    [string] $S,
+    [string] $dcAdminUserName,
 
     [Parameter(Mandatory = $true)]
-    [string] $U,
+    [string] $dcAdminPassword,
 
     [Parameter(Mandatory = $true)]
-    [string] $P
+    [string] $subscriptionGUID,
 
+    [Parameter(Mandatory = $true)]
+    [string] $domainName
 )
+
+#Extract FSlogix agent 
+Expand-Archive -path .\Artefacts.zip 
+cd .\Artefacts
 
 # Set execution policy    
 Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser -Force
@@ -45,14 +52,13 @@ Set-Location $PSScriptroot
 Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
 Install-Module -Name PowershellGet -MinimumVersion 2.2.4.1 -Force
 
-Install-Module -Name Az -Force -Verbose
+Install-Module -Name Az -Force -Verbose -AllowClobber
 
 Import-Module -Name AzFilesHybrid -Force -Verbose
 Import-Module -Name activedirectory -Force -Verbose
 
 # Find existing OU or create new one. Get path for OU from domain by splitting the domain name, to format DC=fabrikam,DC=com
-$domain = $U.split('@')[1]
-$DC = $domain.split('.')
+$DC = $domainName.split('.')
 foreach($name in $DC) {
     $path = $path + ',DC=' + $name
 }
@@ -63,9 +69,8 @@ if ($ou -eq $null) {
 }
 
 # Connect to Azure
-$Credential = New-Object System.Management.Automation.PsCredential($U, (ConvertTo-SecureString $P -AsPlainText -Force))
+$Credential = New-Object System.Management.Automation.PsCredential($dcAdminUserName, (ConvertTo-SecureString $dcAdminPassword -AsPlainText -Force))
 Connect-AzAccount -Credential $Credential
-$context = Get-AzContext
-Select-AzSubscription -SubscriptionId $context.Subscription.Id
+Select-AzSubscription -SubscriptionId $subscriptionGUID
 
-Join-AzStorageAccountForAuth -ResourceGroupName $RG -StorageAccountName $S -DomainAccountType 'ComputerAccount' -OrganizationalUnitName 'Profiles Storage' -OverwriteExistingADObject
+Join-AzStorageAccountForAuth -ResourceGroupName $resourceGroup -StorageAccountName $storageAccount -DomainAccountType 'ComputerAccount' -OrganizationalUnitName 'Profiles Storage' -OverwriteExistingADObject
