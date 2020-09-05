@@ -48,7 +48,7 @@
                         "baseUri": "https://raw.githubusercontent.com/madsamuel/wvd/master/azure%20files%20ad%20join/",
                         "cseName": "[concat(parameters('domainControlerVM'),'/','customscript')]",
                         "resourceGroupName": "[resourcegroup().name]",
-                        "subscriptionGUID": "[subscription()]"
+                        "subscriptionGUID": "[subscription().subscriptionId]"
                 },
                 "resources": [
                 {
