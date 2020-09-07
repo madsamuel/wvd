@@ -40,14 +40,13 @@ param(
 
 #Extract FSlogix agent 
 Expand-Archive -path .\Artefacts.zip 
-cd .\Artefacts
+Set-Location $PSScriptroo
 
 # Set execution policy    
 Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser -Force
 
-Set-Location $PSScriptroot
-
 # Import required modules
+cd .\Artefacts
 .\CopyToPSPath.ps1
 Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
 Install-Module -Name PowershellGet -MinimumVersion 2.2.4.1 -Force
