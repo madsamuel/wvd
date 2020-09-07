@@ -37,14 +37,20 @@
             "metadata": {
                 "description": "Admin password."
             }
+        },
+        "timestamp": {
+            "defaultValue": "[utcNow()]",
+            "type": "String",
+            "metadata": {
+                "description": "Timestamp of the custom script."
+            }
         }
     },
     "variables": {
         "baseUri": "https://raw.githubusercontent.com/madsamuel/wvd/master/azure%20files%20ad%20join/",
         "cseName": "[concat(parameters('domainControlerVM'),'/','customscript')]",
         "resourceGroupName": "[resourcegroup().name]",
-        "subscriptionGUID": "[subscription().subscriptionId]",
-        "timestamp": "[utcNow()]"
+        "subscriptionGUID": "[subscription().subscriptionId]"
     },
     "resources": [
         {
