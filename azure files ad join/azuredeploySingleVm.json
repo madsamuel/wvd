@@ -1,83 +1,89 @@
 {
-        "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-                "contentVersion": "1.0.0.0",
-                "parameters": {
-                        "domainControlerVM": {
-                                "type": "string",
-                                "metadata": {
-                                        "description": "DC."
-                                },
-                                "defaultValue": "adVM"
-                        },
-                         "domainName": {
-                                "type": "string",
-                                "metadata": {
-                                        "description": "FQDN."
-                                },
-                                "defaultValue": "gt090617.onmmicrosoft.com"
-                        },
-                        "storageAccount": {
-                                "type": "string",
-                                "metadata": {
-                                        "description": "Storage account name."
-                                },
-                                "defaultValue": "storehqty7iaprrubg"
-                        },
-                        "adminUserName": {
-                                "type": "string",
-                                "metadata": {
-                                        "description": "Admin user name, no UPNs. For example, ssa. "
-                                },
-                                "defaultValue":"admin@gt090617.onmicrosoft.com"
-                        },
-                        "adminPassword": {
-                                "type": "secureString",
-                                "metadata": {
-                                        "description": "Admin password."
-                                }
-                        },
-                        "timestamp": {
-                                "type": "string",
-                                "metadata": {
-                                        "description": "Timestamp of the custom script."
-                                },
-                                "defaultValue":"[utcNow()]"
-                        }
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "domainControlerVM": {
+            "defaultValue": "adVM",
+            "type": "String",
+            "metadata": {
+                "description": "DC."
+            }
+        },
+        "domainName": {
+            "defaultValue": "gt090617.onmmicrosoft.com",
+            "type": "String",
+            "metadata": {
+                "description": "FQDN."
+            }
+        },
+        "storageAccountResourceGroup": {
+            "type": "String",
+            "metadata": {
+                "description": "Storage account resource group."
+            }
+        },
+        "storageAccount": {
+            "defaultValue": "storagek6whrl5jfskci",
+            "type": "String",
+            "metadata": {
+                "description": "Storage account name."
+            }
+        },
+        "adminUserName": {
+            "defaultValue": "admin@gt090617.onmicrosoft.com",
+            "type": "String",
+            "metadata": {
+                "description": "Admin user name, no UPNs. For example, ssa. "
+            }
+        },
+        "adminPassword": {
+            "type": "SecureString",
+            "metadata": {
+                "description": "Admin password."
+            }
+        },
+        "timestamp": {
+            "defaultValue": "[utcNow()]",
+            "type": "String",
+            "metadata": {
+                "description": "Timestamp of the custom script."
+            }
+        }
+    },
+    "variables": {
+        "baseUri": "https://raw.githubusercontent.com/madsamuel/wvd/master/azure%20files%20ad%20join/",
+        "cseName": "[concat(parameters('domainControlerVM'),'/','customscript')]",
+        "resourceGroupName": "[resourcegroup().name]",
+        "subscriptionGUID": "[subscription().subscriptionId]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "apiVersion": "2018-10-01",
+            "name": "[variables('cseName')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "publisher": "Microsoft.Compute",
+                "type": "CustomScriptExtension",
+                "typeHandlerVersion": "1.9",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "fileUris": [
+                        "[concat(variables('baseUri'),'Artefacts.zip')]",
+                        "[concat(variables('baseUri'),'setup.ps1')]"
+                    ],
+                    "timestamp": "[parameters('timestamp')]"
                 },
-                "variables": {
-                        "baseUri": "https://raw.githubusercontent.com/madsamuel/wvd/master/azure%20files%20ad%20join/",
-                        "cseName": "[concat(parameters('domainControlerVM'),'/','customscript')]",
-                        "resourceGroupName": "[resourcegroup().name]",
-                        "subscriptionGUID": "[subscription().subscriptionId]"
-                },
-                "resources": [
-                {
-                        "apiVersion": "2018-10-01",
-                        "type": "Microsoft.Compute/virtualMachines/extensions",
-                        "name": "[variables('cseName')]",
-                        "location": "[resourceGroup().location]",
-                        "properties": {
-                                "publisher": "Microsoft.Compute",
-                                "type": "CustomScriptExtension",
-                                "typeHandlerVersion": "1.9",
-                                "autoUpgradeMinorVersion": true,
-                                "settings": {
-                                        "fileUris": [
-                                                "[concat(variables('baseUri'),'Artefacts.zip')]",
-                                                "[concat(variables('baseUri'),'setup.ps1')]"                                                                                               
-                                                ],
-                                        "timestamp":"[parameters('timestamp')]"
-                                },
-                                "protectedSettings": {
-                                        "commandToExecute":"[concat('powershell -ExecutionPolicy Unrestricted -File setup.ps1 -resourceGroup ', variables('resourceGroupName'),' -storageAccount ', parameters('storageAccount'),' -dcAdminUserName ', parameters('adminUserName'), ' -dcAdminPassword ', parameters('adminPassword'), ' -subscriptionGUID ', variables('subscriptionGUID'), ' -domainName ', parameters('domainName'))]"
-                                }
-                        }
+                "protectedSettings": {
+                    "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File setup.ps1 -resourceGroup ', parameters('storageAccountResourceGroup'),' -storageAccount ', parameters('storageAccount'),' -dcAdminUserName ', parameters('adminUserName'), ' -dcAdminPassword ', parameters('adminPassword'), ' -subscriptionGUID ', variables('subscriptionGUID'), ' -domainName ', parameters('domainName'))]"
                 }
-        ],
-                "outputs": {
-                        "instanceView": {
-                                "value": "[reference( resourceId('Microsoft.Compute/virtualMachines/extensions', parameters('domainControlerVM'),'customscript')).instanceView]",
-                                "type": "object"
-                        }
-                }
+            }
+        }
+    ],
+    "outputs": {
+        "instanceView": {
+            "type": "Object",
+            "value": "[reference( resourceId('Microsoft.Compute/virtualMachines/extensions', parameters('domainControlerVM'),'customscript')).instanceView]"
+        }
+    }
 }
