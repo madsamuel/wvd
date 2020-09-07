@@ -67,8 +67,7 @@
                     "fileUris": [
                         "[concat(variables('baseUri'),'Artefacts.zip')]",
                         "[concat(variables('baseUri'),'setup.ps1')]"
-                    ],
-                    "timestamp": "[variables('timestamp')]"
+                    ]                    
                 },
                 "protectedSettings": {
                     "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File setup.ps1 -resourceGroup ', parameters('storageAccountResourceGroup'),' -storageAccount ', parameters('storageAccount'),' -dcAdminUserName ', parameters('adminUserName'), ' -dcAdminPassword ', parameters('adminPassword'), ' -subscriptionGUID ', variables('subscriptionGUID'), ' -domainName ', parameters('domainName'))]"
