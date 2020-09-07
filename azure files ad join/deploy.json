@@ -2,38 +2,34 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "domainControlerVM": {
-            "defaultValue": "adVM",
+        "domainControlerVM": {          
             "type": "String",
             "metadata": {
-                "description": "DC."
+                "description": "Host name of the domain controller. For example, adVM."
             }
         },
-        "domainName": {
-            "defaultValue": "gt090617.onmmicrosoft.com",
+        "domainName": {            
             "type": "String",
             "metadata": {
-                "description": "FQDN."
+                "description": "FQDN where storage account will be joined."
             }
         },
         "storageAccountResourceGroup": {
             "type": "String",
             "metadata": {
-                "description": "Storage account resource group."
+                "description": "Resource group for the storage account ."
             }
         },
-        "storageAccount": {
-            "defaultValue": "storagek6whrl5jfskci",
+        "storageAccount": {            
             "type": "String",
             "metadata": {
-                "description": "Storage account name."
+                "description": "Name of the storage account."
             }
         },
-        "adminUserName": {
-            "defaultValue": "admin@gt090617.onmicrosoft.com",
+        "adminUserName": {            
             "type": "String",
             "metadata": {
-                "description": "Admin user name, no UPNs. For example, ssa. "
+                "description": "Global admin on the Azure AD."
             }
         },
         "adminPassword": {
@@ -41,20 +37,14 @@
             "metadata": {
                 "description": "Admin password."
             }
-        },
-        "timestamp": {
-            "defaultValue": "[utcNow()]",
-            "type": "String",
-            "metadata": {
-                "description": "Timestamp of the custom script."
-            }
         }
     },
     "variables": {
         "baseUri": "https://raw.githubusercontent.com/madsamuel/wvd/master/azure%20files%20ad%20join/",
         "cseName": "[concat(parameters('domainControlerVM'),'/','customscript')]",
         "resourceGroupName": "[resourcegroup().name]",
-        "subscriptionGUID": "[subscription().subscriptionId]"
+        "subscriptionGUID": "[subscription().subscriptionId]",
+        "timestamp": "[utcNow()]"
     },
     "resources": [
         {
@@ -72,7 +62,7 @@
                         "[concat(variables('baseUri'),'Artefacts.zip')]",
                         "[concat(variables('baseUri'),'setup.ps1')]"
                     ],
-                    "timestamp": "[parameters('timestamp')]"
+                    "timestamp": "[variables('timestamp')]"
                 },
                 "protectedSettings": {
                     "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File setup.ps1 -resourceGroup ', parameters('storageAccountResourceGroup'),' -storageAccount ', parameters('storageAccount'),' -dcAdminUserName ', parameters('adminUserName'), ' -dcAdminPassword ', parameters('adminPassword'), ' -subscriptionGUID ', variables('subscriptionGUID'), ' -domainName ', parameters('domainName'))]"
