@@ -100,8 +100,8 @@
             "name": "[variables('cseName')]",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts/fileServices/shares', parameters('sharePrefix'))]"
-            ],
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+            ]
             "properties": {
                 "publisher": "Microsoft.Compute",
                 "type": "CustomScriptExtension",
