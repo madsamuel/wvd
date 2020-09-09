@@ -1,7 +1,7 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-    "contentVersion": "1.0.0.0",
-    "parameters": {
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
         "storageAccountName": {
             "defaultValue": "[concat('storage', uniqueString(resourceGroup().id))]",
             "type": "String",
@@ -28,101 +28,28 @@
             "metadata": {
                 "description": "Specifies the prefix of the file share names."
             }
-        },
-        "storageAccountResourceGroup": {
-            "type": "String",
-            "metadata": {
-                "description": "The resource group of the storage account."
-            }
-        },
-        "storageAccountLocation": {
-            "type": "String",
-            "defaultValue": "CentralUs",
-            "metadata": {
-                "description": "The location of the storage account."
-            }
-        },
-        "domainControlerVM": {
-            "type": "String",
-            "metadata": {
-                "description": "Host name of the domain controller. For example, adVM."
-            }
-        },
-        "domainName": {
-            "type": "String",
-            "metadata": {
-                "description": "FQDN where storage account will be joined."
-            }
-        },
-        "adminUserName": {
-            "type": "String",
-            "metadata": {
-                "description": "Global admin on the Azure AD."
-            }
-        },
-        "adminPassword": {
-            "type": "SecureString",
-            "metadata": {
-                "description": "Admin password."
-            }
         }
     },
-    "variables": {
-        "baseUri": "https://raw.githubusercontent.com/madsamuel/wvd/master/azure%20files%20ad%20join/",
-        "cseName": "[concat(parameters('domainControlerVM'),'/','customscript')]",
-        "subscriptionGUID": "[subscription().subscriptionId]"
-    },
-    "resources": [
-        {
-            "type": "Microsoft.Storage/storageAccounts",
-            "apiVersion": "2019-04-01",
-            "name": "[parameters('storageAccountName')]",
-            "location": "[parameters('storageAccountLocation')]",
-            "sku": {
-                "name": "[parameters('storageAccountType')]"
-            },
-            "kind": "StorageV2",
-            "properties": {
-                "accessTier": "Hot"
-            }
+  "variables": {},
+  "resources": [
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "linkedTemplate",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri":"https://raw.githubusercontent.com/madsamuel/wvd/master/create%20storage%20account%20and%20ad%20join/createStorageAccount.json",
+          "contentVersion":"1.0.0.0"
         },
-        {
-            "type": "Microsoft.Storage/storageAccounts/fileServices/shares",
-            "apiVersion": "2019-04-01",
-            "name": "[concat(parameters('storageAccountName'), '/default/', parameters('sharePrefix'))]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
-            ]
-        },
-        {
-            "type": "Microsoft.Compute/virtualMachines/extensions",
-            "apiVersion": "2018-10-01",
-            "name": "[variables('cseName')]",
-            "location": "[resourceGroup().location]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
-            ]
-            "properties": {
-                "publisher": "Microsoft.Compute",
-                "type": "CustomScriptExtension",
-                "typeHandlerVersion": "1.9",
-                "autoUpgradeMinorVersion": true,
-                "settings": {
-                    "fileUris": [
-                        "[concat(variables('baseUri'),'Artefacts.zip')]",
-                        "[concat(variables('baseUri'),'setup.ps1')]"
-                    ]
-                },
-                "protectedSettings": {
-                    "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File setup.ps1 -resourceGroup ', parameters('storageAccountResourceGroup'),' -storageAccount ', parameters('storageAccountName'),' -dcAdminUserName ', parameters('adminUserName'), ' -dcAdminPassword ', parameters('adminPassword'), ' -subscriptionGUID ', variables('subscriptionGUID'), ' -domainName ', parameters('domainName'))]"
-                }
-            }
+        "parameters": {
+            "storageAccountName":{"value": "[parameters('storageAccountName')]"},
+            "storageAccountType":{"value": "[parameters('storageAccountType')]"},
+            "sharePrefix":{"value": "[parameters('sharePrefix')]"}
         }
-    ],
-    "outputs": {
-        "instanceView": {
-            "type": "Object",
-            "value": "[reference( resourceId('Microsoft.Compute/virtualMachines/extensions', parameters('domainControlerVM'),'customscript')).instanceView]"
-        }
+      }
     }
+  ],
+  "outputs": {
+  }
 }
