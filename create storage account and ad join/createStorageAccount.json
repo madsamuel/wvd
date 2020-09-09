@@ -73,8 +73,7 @@
                             "type" : "Microsoft.Storage/storageAccounts",
                             "apiVersion" : "2019-04-01",
                             "name" : "[parameters('storageAccountName')]",
-                            "location" : "[parameters('storageAccountLocation')]",
-                            "resourceGroup" : "[parameters('storageAccountResourceGroup')]",
+                            "location" : "[parameters('storageAccountLocation')]",                            
                             "dependsOn": [
                                 "[resourceId('Microsoft.Resources/resourceGroups/', parameters('storageAccountResourceGroup'))]"
                             ],
