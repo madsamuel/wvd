@@ -2,6 +2,19 @@
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+        "storageAccountResourceGroup": {
+            "type": "String",
+            "metadata": {
+                "description": "The resource group of the storage account."
+            }
+        },
+        "storageAccountLocation": {
+            "type": "String",
+            "defaultValue": "CentralUs",
+            "metadata": {
+                "description": "The location of the storage account."
+            }
+        },
         "storageAccountName": {
             "defaultValue": "[concat('storage', uniqueString(resourceGroup().id))]",
             "type": "String",
@@ -45,7 +58,9 @@
         "parameters": {
             "storageAccountName":{"value": "[parameters('storageAccountName')]"},
             "storageAccountType":{"value": "[parameters('storageAccountType')]"},
-            "sharePrefix":{"value": "[parameters('sharePrefix')]"}
+            "sharePrefix":{"value": "[parameters('sharePrefix')]"},
+            "storageAccountResourceGroup":{"value": "[parameters('storageAccountResourceGroup')]"},
+            "storageAccountLocation":{"value": "[parameters('storageAccountLocation')]"}
         }
       }
     }
