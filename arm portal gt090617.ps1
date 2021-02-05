@@ -128,7 +128,7 @@ $resourceGroupName = "19013vb-image-rg-v2"
 $storageAccountName = "19013vbimagesav2"
 $keyVaultName = "testKeyVault413"
 $keyVaultSpAppId = "cfa8b339-82a2-471a-a3c9-0fc0be7a4093"
-$storageAccountKey = "Aup/3tH+176gdWuFPxB59YPl+m/rdMvxrKEOAw0w4O7sozPK/A8qYWYFBym1rCpRvvwCfIVkIXaNgHPT59C2Qg=="
+$storageAccountKey = ""
 
 # Get your User Id
 $userId = (Get-AzContext).Account.Id
