@@ -1,0 +1,43 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {        
+        "vmList": {
+            "minLength": 1,
+            "type": "String",
+            "metadata": {
+                "description": "List of virtual machines to enable screen capture protection. E.g. VM01, VM02, VM03. "
+            }
+        }
+    },
+    "variables": {
+        "baseUri": "https://raw.githubusercontent.com/madsamuel/wvd/master/fslogix%20dsc/",
+        "vmListArray": "[split(parameters('vmList'),',')]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "apiVersion": "2018-10-01",
+            "name": "[concat(trim(variables('vmListArray')[copyIndex()]),'/customscript')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "publisher": "Microsoft.Compute",
+                "type": "CustomScriptExtension",
+                "typeHandlerVersion": "1.9",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "fileUris": [
+                        "[concat(variables('baseUri'),'enableScrProtection.ps1')]"                        
+                    ]
+                },
+                "protectedSettings": {
+                    "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File enableScrProtection.ps1')]"
+                }
+            },
+            "copy": {
+                "name": "vmLoop",
+                "count": "[length(variables('vmListArray'))]"
+            }
+        }
+    ]
+}
