@@ -11,7 +11,7 @@
         }
     },
     "variables": {
-        "baseUri": "https://raw.githubusercontent.com/madsamuel/wvd/master/fslogix%20dsc/",
+        "baseUri": "https://raw.githubusercontent.com/madsamuel/wvd/master/screen%20capture/",
         "vmListArray": "[split(parameters('vmList'),',')]"
     },
     "resources": [
