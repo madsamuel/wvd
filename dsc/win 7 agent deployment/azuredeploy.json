@@ -23,7 +23,7 @@
                         }
                 },
                 "variables": {
-                        "baseUri": "https://raw.githubusercontent.com/madsamuel/wvd/master/win%207%20agent%20deployment/",
+                        "baseUri": "https://raw.githubusercontent.com/madsamuel/wvd/master/dsc/win%207%20agent%20deployment/",
                         "cseName": "[concat(parameters('vmName'),'/','customscript')]"
                 },
                 "resources": [
