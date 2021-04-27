@@ -16,7 +16,8 @@
             }
         }
     },
-    "variables": {        
+    "variables": {      
+         "baseUri": "https://raw.githubusercontent.com/madsamuel/wvd/master/dsc/install%20certificates/",  
         "vmListArray": "[split(parameters('vmList'),',')]"
     },
     "resources": [
@@ -30,7 +31,10 @@
                 "type": "CustomScriptExtension",
                 "typeHandlerVersion": "1.9",
                 "autoUpgradeMinorVersion": true,
-                "settings": {                    
+                "settings": {   
+                     "fileUris": [                                                
+                                                "[concat(variables('baseUri'),'InstallCertificate.ps1')]"                                                                                               
+                                                ]                 
                 },
                 "protectedSettings": {
                     "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File InstallCertificate.ps1 -certPath ', parameters('certPath'))]"

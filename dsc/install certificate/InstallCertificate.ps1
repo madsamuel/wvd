@@ -22,7 +22,6 @@ else
 Write-Host "Download certificate start!" 
 
 $sb = Start-Job -ScriptBlock {    
-  Write-Host $args[0]
   Invoke-WebRequest -Uri $args[0] -OutFile $args[1]
 } -ArgumentList $certPath, $certLocalPath
 
