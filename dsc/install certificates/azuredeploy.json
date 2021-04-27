@@ -2,22 +2,21 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "vhdPath": {
+        "certPath": {
             "type": "String",
             "metadata": {
-                "description": "SMB path where FSLogix agent will store profiles."
+                "description": "URI path where Certificate is stored."
             }
         },
         "vmList": {
             "minLength": 1,
             "type": "String",
             "metadata": {
-                "description": "List of virtual machines to install the FSLogix agent on, if using multiple VMs, make their names comma separate. E.g. VM01, VM02, VM03.to "
+                "description": "List of virtual machines to install the certificate on. E.g. VM01, VM02, VM03.to "
             }
         }
     },
-    "variables": {
-        "baseUri": "https://raw.githubusercontent.com/madsamuel/wvd/master/fslogix%20dsc/",
+    "variables": {        
         "vmListArray": "[split(parameters('vmList'),',')]"
     },
     "resources": [
@@ -31,14 +30,10 @@
                 "type": "CustomScriptExtension",
                 "typeHandlerVersion": "1.9",
                 "autoUpgradeMinorVersion": true,
-                "settings": {
-                    "fileUris": [
-                        "[concat(variables('baseUri'),'FSLogix_Apps.zip')]",
-                        "[concat(variables('baseUri'),'FSLogixAgentInstall.ps1')]"
-                    ]
+                "settings": {                    
                 },
                 "protectedSettings": {
-                    "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File FSLogixAgentInstall.ps1 -vhdPath ', parameters('vhdPath'))]"
+                    "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File InstallCertificate.ps1 -certPath ', parameters('certPath'))]"
                 }
             },
             "copy": {
