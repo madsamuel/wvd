@@ -14,10 +14,14 @@
             "metadata": {
                 "description": "List of virtual machines to install the certificate on. E.g. VM01, VM02, VM03.to "
             }
+        },
+        "timestamp": {
+            "defaultValue": "[utcNow('u')]",
+            "type": "String"
         }
     },
-    "variables": {      
-         "baseUri": "https://raw.githubusercontent.com/madsamuel/wvd/master/dsc/install%20certificates/",  
+    "variables": {
+        "baseUri": "https://raw.githubusercontent.com/madsamuel/wvd/master/dsc/install%20certificate/",
         "vmListArray": "[split(parameters('vmList'),',')]"
     },
     "resources": [
@@ -31,10 +35,11 @@
                 "type": "CustomScriptExtension",
                 "typeHandlerVersion": "1.9",
                 "autoUpgradeMinorVersion": true,
-                "settings": {   
-                     "fileUris": [                                                
-                                                "[concat(variables('baseUri'),'InstallCertificate.ps1')]"                                                                                               
-                                                ]                 
+                "settings": {
+                    "fileUris": [
+                        "[concat(variables('baseUri'),'InstallCertificate.ps1')]"
+                    ],
+                    "timestamp": "[parameters('timestamp')]"
                 },
                 "protectedSettings": {
                     "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File InstallCertificate.ps1 -certPath ', parameters('certPath'))]"
